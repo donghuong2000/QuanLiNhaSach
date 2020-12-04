@@ -1,0 +1,16 @@
+﻿@model Book
+    <div class="card col-md-3">
+        <img class="card-img-top" src="@Model.ImgUrl" height="300"  width="100"alt="Card image cap">
+        <div class="card-body">
+            <h5 class="card-title">@Model.Name</h5>
+            @if (Model.Decription.Length < 30)
+            {
+                <p class="card-text">@Model.Decription ...</p>
+            }
+            else
+            {
+                <p class="card-text">@Model.Decription.Substring(0, 30) ...</p>
+            }
+            <a href="#" class="btn btn-primary">Thêm vào giỏ hàng</a>
+        </div>
+    </div>

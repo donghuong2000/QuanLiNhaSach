@@ -1,0 +1,13 @@
+﻿@model IEnumerable<Book>
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        @foreach (var item in Model)
+        {
+            <partial name="_BookViewPartial" model="item" />
+        }
+    </div>
+</div>

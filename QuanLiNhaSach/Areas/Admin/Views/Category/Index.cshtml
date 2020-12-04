@@ -1,0 +1,54 @@
+﻿
+@{
+    ViewData["Title"] = "Danh sách danh mục";
+}
+
+
+
+<!-- Page Heading -->
+
+
+<!-- DataTales Example -->
+<div class="card shadow mb-4">
+    <div class="card-header py-3 d-flex">
+        <h6 class="m-0 font-weight-bold text-primary">Danh sách danh mục</h6>
+        <a class="btn btn-primary ml-auto" asp-action="upsert">Tạo danh mục</a>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Tên danh mục</th>
+                        <th>Hành động</th>
+
+                    </tr>
+                </thead>
+                <tfoot>
+                    <tr>
+                        <th>Tên danh mục</th>
+                        <th>Hành động</th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script src="~/Admin/vendor/datatables/jquery.dataTables.js"></script>
+    <script src="~/Admin/vendor/datatables/dataTables.bootstrap4.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <script src="~/Admin/js/build/toastr.min.js"></script>
+
+
+
+    <script src="~/Admin/js/Category.js"></script>
+}
+
+@section Header{
+    <link href="~/Admin/js/build/toastr.css" rel="stylesheet" />
+    <link href="~/Admin/vendor/datatables/dataTables.bootstrap4.css" rel="stylesheet" />
+}
+
+
