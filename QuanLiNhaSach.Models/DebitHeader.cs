@@ -12,8 +12,9 @@ namespace QuanLiNhaSach.Models
 
         public string Id { get; set; }
         public string ApplicationUserId { get; set; }
-        public float? TotalDebit { get; set; }
+        public float TotalDebit { get; set; }
 
+        public virtual AppUser ApplicationUser { get; set; }
         public virtual ICollection<DebitDetail> DebitDetail { get; set; }
     }
 }

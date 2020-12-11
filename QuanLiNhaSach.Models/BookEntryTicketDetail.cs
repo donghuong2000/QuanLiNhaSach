@@ -10,7 +10,7 @@ namespace QuanLiNhaSach.Models
         public string Name { get; set; }
         public string CategoryId { get; set; }
         public string Author { get; set; }
-        public int? Count { get; set; }
+        public int Count { get; set; }
 
         public virtual Book Book { get; set; }
         public virtual BookEntryTicket BookEntryTicket { get; set; }

@@ -10,8 +10,8 @@ using QuanLiNhaSach.Data;
 namespace QuanLiNhaSach.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20201204010405_addColQuantityForBook")]
-    partial class addColQuantityForBook
+    [Migration("20201211023347_initDB")]
+    partial class initDB
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -223,19 +223,68 @@ namespace QuanLiNhaSach.Data.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
+            modelBuilder.Entity("QuanLiNhaSach.Models.Bill", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ApplicationUserId")
+                        .HasColumnType("nvarchar(450)")
+                        .HasMaxLength(450);
+
+                    b.Property<DateTime>("DateCreate")
+                        .HasColumnType("datetime");
+
+                    b.Property<string>("StaffId")
+                        .HasColumnType("nvarchar(450)")
+                        .HasMaxLength(450);
+
+                    b.Property<float>("TotalPrice")
+                        .HasColumnType("real");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApplicationUserId");
+
+                    b.HasIndex("StaffId");
+
+                    b.ToTable("Bills");
+                });
+
+            modelBuilder.Entity("QuanLiNhaSach.Models.BillDetail", b =>
+                {
+                    b.Property<string>("BillId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("BookId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("Count")
+                        .HasColumnType("int");
+
+                    b.HasKey("BillId", "BookId")
+                        .HasName("PK__BillDeta__722CF04AE6C856BA");
+
+                    b.HasIndex("BookId");
+
+                    b.ToTable("BillDetails");
+                });
+
             modelBuilder.Entity("QuanLiNhaSach.Models.Book", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Author")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(200)")
+                        .HasMaxLength(200);
 
                     b.Property<string>("CategoryId")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(450)")
+                        .HasMaxLength(450);
 
                     b.Property<DateTime>("DatePublish")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("date");
 
                     b.Property<string>("Decription")
                         .HasColumnType("nvarchar(max)");
@@ -244,7 +293,11 @@ namespace QuanLiNhaSach.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(200)")
+                        .HasMaxLength(200);
+
+                    b.Property<float>("Price")
+                        .HasColumnType("real");
 
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
@@ -256,17 +309,180 @@ namespace QuanLiNhaSach.Data.Migrations
                     b.ToTable("Books");
                 });
 
+            modelBuilder.Entity("QuanLiNhaSach.Models.BookEntryTicket", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("DateEntry")
+                        .HasColumnType("datetime");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("BookEntryTickets");
+                });
+
+            modelBuilder.Entity("QuanLiNhaSach.Models.BookEntryTicketDetail", b =>
+                {
+                    b.Property<string>("BookEntryTicketId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("BookId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Author")
+                        .HasColumnType("nvarchar(200)")
+                        .HasMaxLength(200);
+
+                    b.Property<string>("CategoryId")
+                        .HasColumnType("nvarchar(450)")
+                        .HasMaxLength(450);
+
+                    b.Property<int>("Count")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(200)")
+                        .HasMaxLength(200);
+
+                    b.HasKey("BookEntryTicketId", "BookId")
+                        .HasName("PK__BookEntr__E356823B5A98F79F");
+
+                    b.HasIndex("BookId");
+
+                    b.HasIndex("CategoryId");
+
+                    b.ToTable("BookEntryTicketDetails");
+                });
+
+            modelBuilder.Entity("QuanLiNhaSach.Models.BookExistDetail", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("BookExistHeaderId")
+                        .HasColumnType("nvarchar(450)")
+                        .HasMaxLength(450);
+
+                    b.Property<int>("FirstExist")
+                        .HasColumnType("int");
+
+                    b.Property<int>("IncurredExist")
+                        .HasColumnType("int");
+
+                    b.Property<int>("LastExist")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("TimeRecord")
+                        .HasColumnType("datetime");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BookExistHeaderId");
+
+                    b.ToTable("BookExistDetails");
+                });
+
+            modelBuilder.Entity("QuanLiNhaSach.Models.BookExistHeader", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("BookId")
+                        .HasColumnType("nvarchar(450)")
+                        .HasMaxLength(450);
+
+                    b.Property<int>("TotalExist")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BookId");
+
+                    b.ToTable("BookExistHeaders");
+                });
+
             modelBuilder.Entity("QuanLiNhaSach.Models.Category", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(200)")
+                        .HasMaxLength(200);
 
                     b.HasKey("Id");
 
                     b.ToTable("Categories");
+                });
+
+            modelBuilder.Entity("QuanLiNhaSach.Models.DebitDetail", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("DebitHeaderId")
+                        .HasColumnType("nvarchar(450)")
+                        .HasMaxLength(450);
+
+                    b.Property<float>("FirstDebit")
+                        .HasColumnType("real");
+
+                    b.Property<float>("IncurredDebit")
+                        .HasColumnType("real");
+
+                    b.Property<float>("LastDebit")
+                        .HasColumnType("real");
+
+                    b.Property<DateTime>("TimeRecord")
+                        .HasColumnType("datetime");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DebitHeaderId");
+
+                    b.ToTable("DebitDetails");
+                });
+
+            modelBuilder.Entity("QuanLiNhaSach.Models.DebitHeader", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ApplicationUserId")
+                        .HasColumnType("nvarchar(450)")
+                        .HasMaxLength(450);
+
+                    b.Property<float>("TotalDebit")
+                        .HasColumnType("real");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApplicationUserId");
+
+                    b.ToTable("DebitHeaders");
+                });
+
+            modelBuilder.Entity("QuanLiNhaSach.Models.Receipt", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ApplicationUserId")
+                        .HasColumnType("nvarchar(450)")
+                        .HasMaxLength(450);
+
+                    b.Property<DateTime>("DateCreate")
+                        .HasColumnType("datetime");
+
+                    b.Property<float>("Proceeds")
+                        .HasColumnType("real");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApplicationUserId");
+
+                    b.ToTable("Receipts");
                 });
 
             modelBuilder.Entity("QuanLiNhaSach.Models.AppUser", b =>
@@ -274,13 +490,15 @@ namespace QuanLiNhaSach.Data.Migrations
                     b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
 
                     b.Property<string>("Address")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)")
+                        .HasMaxLength(450);
 
                     b.Property<DateTime>("DateOfBirth")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("date");
 
                     b.Property<string>("FullName")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)")
+                        .HasMaxLength(450);
 
                     b.HasDiscriminator().HasValue("AppUser");
                 });
@@ -336,11 +554,100 @@ namespace QuanLiNhaSach.Data.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("QuanLiNhaSach.Models.Bill", b =>
+                {
+                    b.HasOne("QuanLiNhaSach.Models.AppUser", "ApplicationUser")
+                        .WithMany("BillApplicationUser")
+                        .HasForeignKey("ApplicationUserId")
+                        .HasConstraintName("FK_Bill_APPUSER");
+
+                    b.HasOne("QuanLiNhaSach.Models.AppUser", "Staff")
+                        .WithMany("BillStaff")
+                        .HasForeignKey("StaffId")
+                        .HasConstraintName("FK_Bill_staff");
+                });
+
+            modelBuilder.Entity("QuanLiNhaSach.Models.BillDetail", b =>
+                {
+                    b.HasOne("QuanLiNhaSach.Models.Bill", "Bill")
+                        .WithMany("BillDetail")
+                        .HasForeignKey("BillId")
+                        .HasConstraintName("FK_BillDetail_Bill")
+                        .IsRequired();
+
+                    b.HasOne("QuanLiNhaSach.Models.Book", "Book")
+                        .WithMany("BillDetail")
+                        .HasForeignKey("BookId")
+                        .HasConstraintName("FK_BillDetail_Book")
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("QuanLiNhaSach.Models.Book", b =>
                 {
                     b.HasOne("QuanLiNhaSach.Models.Category", "Category")
-                        .WithMany()
-                        .HasForeignKey("CategoryId");
+                        .WithMany("Books")
+                        .HasForeignKey("CategoryId")
+                        .HasConstraintName("FK_Book_Category");
+                });
+
+            modelBuilder.Entity("QuanLiNhaSach.Models.BookEntryTicketDetail", b =>
+                {
+                    b.HasOne("QuanLiNhaSach.Models.BookEntryTicket", "BookEntryTicket")
+                        .WithMany("BookEntryTicketDetail")
+                        .HasForeignKey("BookEntryTicketId")
+                        .HasConstraintName("FK_BookEntryTicketDetail_BookEntryTicket")
+                        .IsRequired();
+
+                    b.HasOne("QuanLiNhaSach.Models.Book", "Book")
+                        .WithMany("BookEntryTicketDetail")
+                        .HasForeignKey("BookId")
+                        .HasConstraintName("FK_BookEntryTicketDetail_Book")
+                        .IsRequired();
+
+                    b.HasOne("QuanLiNhaSach.Models.Category", "Category")
+                        .WithMany("BookEntryTicketDetail")
+                        .HasForeignKey("CategoryId")
+                        .HasConstraintName("FK_BookEntryTicketDetail_Category");
+                });
+
+            modelBuilder.Entity("QuanLiNhaSach.Models.BookExistDetail", b =>
+                {
+                    b.HasOne("QuanLiNhaSach.Models.BookExistHeader", "BookExistHeader")
+                        .WithMany("BookExistDetail")
+                        .HasForeignKey("BookExistHeaderId")
+                        .HasConstraintName("FK_BookExistDetail_BookExistHeader");
+                });
+
+            modelBuilder.Entity("QuanLiNhaSach.Models.BookExistHeader", b =>
+                {
+                    b.HasOne("QuanLiNhaSach.Models.Book", "Book")
+                        .WithMany("BookExistHeader")
+                        .HasForeignKey("BookId")
+                        .HasConstraintName("FK_BookExistHeader_Book");
+                });
+
+            modelBuilder.Entity("QuanLiNhaSach.Models.DebitDetail", b =>
+                {
+                    b.HasOne("QuanLiNhaSach.Models.DebitHeader", "DebitHeader")
+                        .WithMany("DebitDetail")
+                        .HasForeignKey("DebitHeaderId")
+                        .HasConstraintName("FK_DebitDetail_DebitHeader");
+                });
+
+            modelBuilder.Entity("QuanLiNhaSach.Models.DebitHeader", b =>
+                {
+                    b.HasOne("QuanLiNhaSach.Models.AppUser", "ApplicationUser")
+                        .WithMany("DebitHeader")
+                        .HasForeignKey("ApplicationUserId")
+                        .HasConstraintName("FK_DebitHeader_APPUSER");
+                });
+
+            modelBuilder.Entity("QuanLiNhaSach.Models.Receipt", b =>
+                {
+                    b.HasOne("QuanLiNhaSach.Models.AppUser", "ApplicationUser")
+                        .WithMany("Receipt")
+                        .HasForeignKey("ApplicationUserId")
+                        .HasConstraintName("FK_Receipt_APPUSER");
                 });
 #pragma warning restore 612, 618
         }

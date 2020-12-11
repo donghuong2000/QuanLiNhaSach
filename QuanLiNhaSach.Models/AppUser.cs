@@ -8,12 +8,21 @@ namespace QuanLiNhaSach.Models
     public class AppUser : IdentityUser
     {
 
+        public AppUser()
+        {
+            BillApplicationUser = new HashSet<Bill>();
+            BillStaff = new HashSet<Bill>();
+            DebitHeader = new HashSet<DebitHeader>();
+            Receipt = new HashSet<Receipt>();
+        }
         public string FullName { get; set; }
-
-        public string  Address { get; set; }
-
+        public string Address { get; set; }
         public DateTime DateOfBirth { get; set; }
 
+        public virtual ICollection<Bill> BillApplicationUser { get; set; }
+        public virtual ICollection<Bill> BillStaff { get; set; }
+        public virtual ICollection<DebitHeader> DebitHeader { get; set; }
+        public virtual ICollection<Receipt> Receipt { get; set; }
 
 
     }

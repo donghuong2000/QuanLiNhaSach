@@ -7,10 +7,10 @@ namespace QuanLiNhaSach.Models
     {
         public string Id { get; set; }
         public string DebitHeaderId { get; set; }
-        public DateTime? TimeRecord { get; set; }
-        public float? FirstDebit { get; set; }
-        public float? IncurredDebit { get; set; }
-        public float? LastDebit { get; set; }
+        public DateTime TimeRecord { get; set; }
+        public float FirstDebit { get; set; }
+        public float IncurredDebit { get; set; }
+        public float LastDebit { get; set; }
 
         public virtual DebitHeader DebitHeader { get; set; }
     }

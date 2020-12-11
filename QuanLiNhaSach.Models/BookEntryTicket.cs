@@ -11,7 +11,7 @@ namespace QuanLiNhaSach.Models
         }
 
         public string Id { get; set; }
-        public DateTime? DateEntry { get; set; }
+        public DateTime DateEntry { get; set; }
 
         public virtual ICollection<BookEntryTicketDetail> BookEntryTicketDetail { get; set; }
     }

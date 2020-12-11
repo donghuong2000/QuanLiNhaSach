@@ -12,7 +12,7 @@ namespace QuanLiNhaSach.Models
 
         public string Id { get; set; }
         public string BookId { get; set; }
-        public int? TotalExist { get; set; }
+        public int TotalExist { get; set; }
 
         public virtual Book Book { get; set; }
         public virtual ICollection<BookExistDetail> BookExistDetail { get; set; }

@@ -7,7 +7,9 @@ namespace QuanLiNhaSach.Models
     {
         public string Id { get; set; }
         public string ApplicationUserId { get; set; }
-        public DateTime? DateCreate { get; set; }
-        public float? Proceeds { get; set; }
+        public DateTime DateCreate { get; set; }
+        public float Proceeds { get; set; }
+
+        public virtual AppUser ApplicationUser { get; set; }
     }
 }
