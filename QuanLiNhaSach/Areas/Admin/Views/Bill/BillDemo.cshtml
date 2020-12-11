@@ -1,0 +1,139 @@
+﻿@model QuanLiNhaSach.Models.Bill
+
+@{
+    ViewData["Title"] = " hóa đơn demo";
+}
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="invoice-title">
+                <h2>HÓA ĐƠN</h2><h3 class="pull-right"> # @Model.Id</h3>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-md-6">
+                    <address>
+                        <strong>thông tin người lập hóa đơn:</strong><br>
+                        @Model.Staff.FullName<br>
+                        @Model.Staff.Email<br>
+
+                    </address>
+                </div>
+                <div class="col-md-6 text-right">
+                    <address>
+                        <strong>Thông tin khách hàng:</strong><br>
+                        @Model.ApplicationUser.FullName<br>
+                        @Model.ApplicationUser.Email<br>
+                        @Model.ApplicationUser.PhoneNumber<br>
+                        @Model.ApplicationUser.Address<br>
+
+                    </address>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <address>
+                        <strong>Phương thức thanh toán:</strong><br>
+                        Tiền mặt<br>
+
+                    </address>
+                </div>
+                <div class="col-md-6 text-right">
+                    <address>
+                        <strong>Ngày lập hóa đơn</strong><br>
+                        @Model.DateCreate<br><br>
+                    </address>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title"><strong>Chi tiết hóa đơn</strong></h3>
+                </div>
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table class="table table-condensed">
+                            <thead>
+                                <tr>
+                                    <td><strong>Item</strong></td>
+                                    <td class="text-center"><strong>Giá tiền</strong></td>
+                                    <td class="text-center"><strong>Số lượng</strong></td>
+                                    <td class="text-right"><strong>Tổng cộng</strong></td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- foreach ($order->lineItems as $line) or some such thing here -->
+                                @foreach (var item in Model.BillDetail)
+                                {
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <a href="#">
+                                                    <img height="100" width="70" class="rounded" src="@item.Book.ImgUrl" />
+                                                    <span> @item.Book.Name</span>
+                                                </a>
+                                            </div>
+
+                                        </td>
+                                        <td>
+                                            <div style="margin-top:50%" class="text-center">
+                                                @item.Book.Price
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div style="margin-top:21%" class="text-center">
+                                                @item.Count
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div style="margin-top:21%" class="text-right">
+                                                @(item.Book.Price*item.Count)
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                                <tr>
+                                    <td class="thick-line"></td>
+                                    <td class="thick-line"></td>
+                                    <td class="thick-line text-center"><h2><strong>Tổng tiền</strong></h2></td>
+                                    <td class="thick-line text-right"><h2><strong>@Model.TotalPrice</strong></h2></td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <a asp-action="BillDemoCancel" class="btn btn-danger col-6">Hủy thanh toán</a>
+        <a asp-action="BillDemoConfirm" class="btn btn-primary col-6">Xác nhận thanh toán</a>
+    </div>
+</div>
+
+@section Header{
+    <style>
+        .invoice-title h2, .invoice-title h3 {
+            display: inline-block;
+        }
+
+        .table > tbody > tr > .no-line {
+            border-top: none;
+        }
+
+        .table > thead > tr > .no-line {
+            border-bottom: none;
+        }
+
+        .table > tbody > tr > .thick-line {
+            border-top: 2px solid;
+        }
+    </style>
+
+}
+

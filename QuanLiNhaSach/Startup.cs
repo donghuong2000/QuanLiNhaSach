@@ -42,6 +42,14 @@ namespace QuanLiNhaSach
                 options.LogoutPath = $"/Identity/Account/Logout";
                 options.AccessDeniedPath = $"/Identity/Account/AccessDenied";
             });
+            services.AddDistributedMemoryCache();
+
+            services.AddSession(options =>
+            {
+               
+                options.IdleTimeout = TimeSpan.FromSeconds(10000);
+                options.Cookie.IsEssential = true;
+            });
             services.AddControllersWithViews();
             services.AddRazorPages();
         }
@@ -62,7 +70,7 @@ namespace QuanLiNhaSach
             }
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-
+            app.UseSession();
             app.UseRouting();
 
             app.UseAuthentication();

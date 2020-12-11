@@ -22,12 +22,18 @@
   <ItemGroup>
     <ProjectReference Include="..\QuanLiNhaSach.Data\QuanLiNhaSach.Data.csproj" />
     <ProjectReference Include="..\QuanLiNhaSach.Models\QuanLiNhaSach.Models.csproj" />
+    <ProjectReference Include="..\QuanLiNhaSach.Utility\QuanLiNhaSach.Utility.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <Content Update="wwwroot\Admin\js\sb-admin-2 - Copy.min.js">
       <DependentUpon>sb-admin-2.min.js</DependentUpon>
     </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Areas\Manager\Controllers\" />
+    <Folder Include="Areas\Manager\Views\" />
   </ItemGroup>
 
 </Project>
