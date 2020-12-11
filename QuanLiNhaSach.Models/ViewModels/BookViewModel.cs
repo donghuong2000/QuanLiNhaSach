@@ -19,6 +19,10 @@ namespace QuanLiNhaSach.Models.ViewModels
         [Required]
         [Display(Name = "Tên Tác giả")]
         public string Author { get; set; }
+
+        [Required]
+        [Display(Name = "Giá tiền")]
+        public float Price { get; set; }
         [Required]
         [Display(Name = "Danh mục")]
         public string CategoryId { get; set; }
@@ -32,7 +36,7 @@ namespace QuanLiNhaSach.Models.ViewModels
         [Required]
         [Display(Name = "Mô tả")]
         public string Decription { get; set; }
-        [Required]
+        
         [Display(Name = "Ảnh bìa")]
         public IFormFile File { get; set; }
         public string ImgUrl { get; set; }

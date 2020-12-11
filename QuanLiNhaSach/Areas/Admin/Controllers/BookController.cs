@@ -61,6 +61,7 @@ namespace QuanLiNhaSach.Areas.Admin.Controllers
             vm.Name = book.Name;
             vm.Author = book.Author;
             vm.CategoryId = book.CategoryId;
+            vm.Price = book.Price;
             vm.Quantity = book.Quantity;
             vm.DatePublish = book.DatePublish;
             vm.Decription = book.Decription;
@@ -114,9 +115,13 @@ namespace QuanLiNhaSach.Areas.Admin.Controllers
                     book.Author = vm.Author;
                     book.CategoryId = vm.CategoryId;
                     book.DatePublish = vm.DatePublish;
+                    book.Price = vm.Price;
                     book.Decription = vm.Decription;
                     book.Quantity = vm.Quantity;
-                    book.ImgUrl = vm.ImgUrl;
+                    if (vm.File!=null)
+                    {
+                        book.ImgUrl = vm.ImgUrl;
+                    }    
                     _db.Books.Update(book);
                     _db.SaveChanges();
                     return RedirectToAction("index");
