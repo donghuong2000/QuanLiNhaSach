@@ -39,7 +39,7 @@
             <div class="bg-white py-2 collapse-inner rounded">
                 <h6 class="collapse-header">Chức năng:</h6>
                 <a class="collapse-item" asp-action="Index" asp-controller="User">Danh sách người dùng</a>
-                <a class="collapse-item"  href="/Admin/user/upsert">Tạo người dùng</a>
+                <a class="collapse-item" href="/Admin/user/upsert">Tạo người dùng</a>
             </div>
         </div>
     </li>
@@ -56,7 +56,7 @@
             <div class="bg-white py-2 collapse-inner rounded">
                 <h6 class="collapse-header">Chức năng:</h6>
                 <a class="collapse-item" asp-action="Index" asp-controller="role">Danh sách role</a>
-                <a class="collapse-item"  href="/Admin/role/upsert">Tạo role</a>
+                <a class="collapse-item" href="/Admin/role/upsert">Tạo role</a>
 
             </div>
         </div>
@@ -78,12 +78,12 @@
             <div class="bg-white py-2 collapse-inner rounded">
                 <h6 class="collapse-header">Chức năng:</h6>
                 <a class="collapse-item" asp-action="Index" asp-controller="category">Danh sách danh mục</a>
-                <a class="collapse-item"  href="/Admin/category/upsert">Tạo danh mục</a>
+                <a class="collapse-item" href="/Admin/category/upsert">Tạo danh mục</a>
 
             </div>
         </div>
     </li>
-    <!-- Nav Item - Pages Collapse Menu -->
+    <!-- Nav Item - Sách Collapse Menu -->
     <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsesach"
            aria-expanded="true" aria-controls="collapsesach">
@@ -100,8 +100,25 @@
             </div>
         </div>
     </li>
+    <!-- Nav Item -Bill Collapse Menu -->
+    <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsebill"
+           aria-expanded="true" aria-controls="collapsesach">
+            <i class="fas fa-file-invoice-dollar"></i>
+            <span>Quản lí Hóa đơn</span>
+        </a>
+        <div id="collapsebill" class="collapse" aria-labelledby="headingsach"
+             data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <h6 class="collapse-header">Chức năng:</h6>
+                <a class="collapse-item" asp-action="Index" asp-controller="bill">Danh sách hóa đơn</a>
+                <a class="collapse-item" href="/Admin/bill/upsert">Tạo Sách</a>
 
-    
+            </div>
+        </div>
+    </li>
+
+
 
     <!-- Divider -->
     <hr class="sidebar-divider d-none d-md-block">
@@ -111,7 +128,7 @@
         <button class="rounded-circle border-0" id="sidebarToggle"></button>
     </div>
 
-    
+
 
 </ul>
 
