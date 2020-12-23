@@ -483,6 +483,34 @@ namespace QuanLiNhaSach.Data.Migrations
                     b.ToTable("Receipts");
                 });
 
+            modelBuilder.Entity("QuanLiNhaSach.Models.Rule", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Decription")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsCheckRange")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("Max")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Min")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("UseThisRule")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Rules");
+                });
+
             modelBuilder.Entity("QuanLiNhaSach.Models.AppUser", b =>
                 {
                     b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");

@@ -10,8 +10,8 @@ using QuanLiNhaSach.Data;
 namespace QuanLiNhaSach.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20201211175843_itoE")]
-    partial class itoE
+    [Migration("20201211185122_addRuleTable")]
+    partial class addRuleTable
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -483,6 +483,34 @@ namespace QuanLiNhaSach.Data.Migrations
                     b.HasIndex("ApplicationUserId");
 
                     b.ToTable("Receipts");
+                });
+
+            modelBuilder.Entity("QuanLiNhaSach.Models.Rule", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Decription")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsCheckRange")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("Max")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Min")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("UseThisRule")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Rules");
                 });
 
             modelBuilder.Entity("QuanLiNhaSach.Models.AppUser", b =>
