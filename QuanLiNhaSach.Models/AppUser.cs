@@ -14,10 +14,13 @@ namespace QuanLiNhaSach.Models
             BillStaff = new HashSet<Bill>();
             DebitHeader = new HashSet<DebitHeader>();
             Receipt = new HashSet<Receipt>();
+            Dept = 0;
         }
         public string FullName { get; set; }
         public string Address { get; set; }
         public DateTime DateOfBirth { get; set; }
+
+        public float Dept { get; set; }
 
         public virtual ICollection<Bill> BillApplicationUser { get; set; }
         public virtual ICollection<Bill> BillStaff { get; set; }
