@@ -1,7 +1,84 @@
-﻿
+﻿@model List<Rule>
 @{
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<div class="container">
 
+
+    <div class="card mt-5">
+        <div class="card-body">
+            <h5 class="card-title">Quy định 1</h5>
+            <p class="card-text">
+                Mô tả: Số luợng nhập ít nhất là @Model[0].Min. Chỉ nhập các đầu sách có luợng tồn
+                ít hơn @Model[0].Max.
+            </p>
+            <div class="row">
+                <div class="col-4 custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="usethisrule1" asp-for="@Model[0].UseThisRule">
+                    <label class="custom-control-label" for="usethisrule1"> Sử dụng quy định này</label>
+                </div>
+                <div class="col-8 input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Số lượng nhập ít nhất và số lượng tồn ít nhất</span>
+                    </div>
+                    <input type="number" id="min-1" class="form-control" placeholder="nhập ít nhất" value="@Model[0].Min">
+                    <input type="number" id="max-1" class="form-control" placeholder="tồn ít nhất" value="@Model[0].Max">
+                </div>
+            </div>
+            <a id="updateqd-1" class="btn btn-primary">Cập nhập quy định</a>
+        </div>
+    </div>
+    <div class="card mt-5">
+        <div class="card-body">
+            <h5 class="card-title">Quy định 2</h5>
+            <p class="card-text">
+                Mô tả: Chỉ bán cho các khách hàng nợ không quá @Model[1].Min và đầu sách có
+                lƣợng tồn sau khi bán ít nhất là @Model[1].Max.
+            </p>
+            <div class="row">
+                <div class="col-4 custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="usethisrule2" asp-for="@Model[1].UseThisRule">
+                    <label class="custom-control-label" for="usethisrule2"> Sử dụng quy định này</label>
+                </div>
+                <div class="col-8 input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">nợ của khách tối đa và tồn tối thiểu</span>
+                    </div>
+                    <input type="number" id="min-2" class="form-control" placeholder="nợ tối đa" value="@Model[1].Min">
+                    <input type="number" id="max-2" class="form-control" placeholder="tồn tối thiểu" value="@Model[1].Max">
+                </div>
+            </div>
+            <a id="updateqd-2" class="btn btn-primary">Cập nhập quy định</a>
+        </div>
+    </div>
+    <div class="card mt-5">
+        <div class="card-body">
+            <h5 class="card-title">Quy định 3</h5>
+            <p class="card-text">
+                Mô tả: Số tiền thu không vuợt quá số tiền khách hàng đang nợ
+            </p>
+            <div class="row">
+                <div class="col-4 custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="usethisrule3" asp-for="@Model[2].UseThisRule">
+                    <label class="custom-control-label" for="usethisrule3"> Sử dụng quy định này</label>
+                </div>
+
+            </div>
+            <a id="updateqd-3" class="btn btn-primary">Cập nhập quy định</a>
+        </div>
+    </div>
+
+
+
+</div>
+
+@section Scripts{
+    <script src="~/Admin/js/build/toastr.min.js"></script>
+
+    <script src="~/Admin/js/rules.js"></script>
+}
+@section Header{
+    <link href="~/Admin/js/build/toastr.css" rel="stylesheet" />
+   
+}
