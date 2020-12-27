@@ -2,9 +2,9 @@
 <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
     <!-- Sidebar - Brand -->
-    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/Admin/">
         <div class="sidebar-brand-icon rotate-n-15">
-            <i class="fas fa-laugh-wink"></i>
+            <i class="fas fa-book-open"></i>
         </div>
         <div class="sidebar-brand-text mx-3 rotate-n-15">Quản lí nhà sách</div>
     </a>
@@ -23,10 +23,7 @@
     <!-- Divider -->
     <hr class="sidebar-divider">
 
-    <!-- Heading -->
-    <div class="sidebar-heading">
-        Interface
-    </div>
+
 
     <!-- Nav Item - Người dùng Collapse Menu -->
     <li class="nav-item">
@@ -49,7 +46,7 @@
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapserole"
            aria-expanded="true" aria-controls="collapserole">
             <i class="fas fa-user-tag"></i>
-            <span>Quản lí role</span>
+            <span>Quản lí chức vụ</span>
         </a>
         <div id="collapserole" class="collapse" aria-labelledby="headingrole"
              data-parent="#accordionSidebar">
@@ -61,6 +58,7 @@
             </div>
         </div>
     </li>
+
 
     <!-- Divider -->
     <hr class="sidebar-divider">
@@ -96,6 +94,7 @@
                 <h6 class="collapse-header">Chức năng:</h6>
                 <a class="collapse-item" asp-action="Index" asp-controller="book">Danh sách Sách</a>
                 <a class="collapse-item" href="/Admin/book/upsert">Tạo Sách</a>
+                <a class="collapse-item" href="/Admin/book/upsert">Tạo phiếu nhập sách</a>
 
             </div>
         </div>
@@ -122,13 +121,13 @@
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseRule"
            aria-expanded="true" aria-controls="collapsesach">
             <i class="fas fa-file-invoice-dollar"></i>
-            <span>Quản lí Hóa đơn</span>
+            <span>Quản lí quy định</span>
         </a>
         <div id="collapseRule" class="collapse" aria-labelledby="headingsach"
              data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
                 <h6 class="collapse-header">Chức năng:</h6>
-                <a class="collapse-item" asp-action="Index" asp-controller="rule">Danh sách rule</a>
+                <a class="collapse-item" asp-action="Index" asp-controller="rule">Danh sách quy định</a>
                
 
             </div>
