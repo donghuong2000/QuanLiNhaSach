@@ -1,4 +1,6 @@
 ﻿$(document).ready(function () {
+	document.getElementById("check_debit").disabled = true
+	document.getElementById("check_debit").checked = false
 	var i = 1;
 	$("#add_row").click(function () {
 		b = i - 1;
@@ -66,4 +68,26 @@ $('#mytable').on('change','.select-book',function () {
         }
     })
 	
+});
+
+
+$('#mycustomer').on('change', '#select-customer', function () {
+	var optionSelected = $(this).find("option:selected");
+	var parent = $(this).parent().parent();
+	var valueSelected = optionSelected.val();
+	var customer = parent.find('#check_debit');
+	console.log(valueSelected)
+	if (valueSelected == "") {
+		console.log("readonly")
+		document.getElementById("check_debit").disabled = true
+		document.getElementById("check_debit").checked = false
+    }
+		
+	else
+	{
+		console.log("not-readonly")
+		document.getElementById("check_debit").disabled = false
+    }
+		
+
 });
