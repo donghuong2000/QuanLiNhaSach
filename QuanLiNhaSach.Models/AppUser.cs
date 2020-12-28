@@ -12,7 +12,7 @@ namespace QuanLiNhaSach.Models
         {
             BillApplicationUser = new HashSet<Bill>();
             BillStaff = new HashSet<Bill>();
-            DebitHeader = new HashSet<DebitHeader>();
+            DebitDetail = new HashSet<DebitDetail>();
             Receipt = new HashSet<Receipt>();
             Dept = 0;
         }
@@ -24,7 +24,7 @@ namespace QuanLiNhaSach.Models
 
         public virtual ICollection<Bill> BillApplicationUser { get; set; }
         public virtual ICollection<Bill> BillStaff { get; set; }
-        public virtual ICollection<DebitHeader> DebitHeader { get; set; }
+        public virtual ICollection<DebitDetail> DebitDetail { get; set; }
         public virtual ICollection<Receipt> Receipt { get; set; }
 
 

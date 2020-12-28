@@ -29,7 +29,7 @@ namespace QuanLiNhaSach.Data
         public DbSet<BookExistHeader> BookExistHeaders { get; set; }
 
         public DbSet<DebitDetail> DebitDetails { get; set; }
-        public DbSet<DebitHeader> DebitHeaders { get; set; }
+        
         public DbSet<Receipt> Receipts { get; set; }
 
 
@@ -162,25 +162,17 @@ namespace QuanLiNhaSach.Data
 
             modelBuilder.Entity<DebitDetail>(entity =>
             {
-                entity.Property(e => e.DebitHeaderId).HasMaxLength(450);
+                entity.Property(e => e.ApplicationUserId).HasMaxLength(450);
 
                 entity.Property(e => e.TimeRecord).HasColumnType("datetime");
 
-                entity.HasOne(d => d.DebitHeader)
-                    .WithMany(p => p.DebitDetail)
-                    .HasForeignKey(d => d.DebitHeaderId)
-                    .HasConstraintName("FK_DebitDetail_DebitHeader");
-            });
-
-            modelBuilder.Entity<DebitHeader>(entity =>
-            {
-                entity.Property(e => e.ApplicationUserId).HasMaxLength(450);
-
                 entity.HasOne(d => d.ApplicationUser)
-                    .WithMany(p => p.DebitHeader)
+                    .WithMany(p => p.DebitDetail)
                     .HasForeignKey(d => d.ApplicationUserId)
-                    .HasConstraintName("FK_DebitHeader_APPUSER");
+                    .HasConstraintName("FK_DebitDetail_AppUser");
             });
+
+           
 
             modelBuilder.Entity<Receipt>(entity =>
             {
