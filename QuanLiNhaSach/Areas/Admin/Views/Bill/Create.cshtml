@@ -21,7 +21,7 @@
                     </thead>
                     <tbody id="mytable">
                         @{
-                            if (Model.BillDetail.Count==0)
+                            if (Model.BillDetail.Count == 0)
                             {
                                 <tr id='addr0'>
                                     <td>1</td>
@@ -40,20 +40,20 @@
                             {
                                 foreach (var item in Model.BillDetail)
                                 {
-                                    <tr id="@("addr" + i.ToString()) ">
-                                        <td>i+1</td>
-                                        @{i = i + 1;}
-
+                                    <tr id='@("addr" + i.ToString())'>
+                                        <td>@(i + 1)</td>
                                         <td>
                                             <select name='product[]' class="form-control select-book" asp-for="@item.BookId" asp-items="ViewBag.Books">
                                                 <option value="">---chọn sách---</option>
                                             </select>
                                         </td>
-                                        <td><input type="number" name='qty[]' placeholder='Nhập số lượng' asp-for="@item.Count" class="form-control qty" step="0" min="0" /></td>
-                                        <td><input type="number" name='price[]' placeholder='0.00' asp-for="@item.Book.Price" class="form-control price" readonly /></td>
-                                        <td><input type="number" name='total[]' placeholder='0.00' asp-for="@(item.Book.Price * item.Count)"  class="form-control total" readonly /></td>
+                                        <td><input type="number" name='qty[]' placeholder='Nhập số lượng' value="@item.Count" class="form-control qty" step="0" min="0" /></td>
+                                        <td><input type="number" name='price[]' placeholder='0.00' value="@item.Book.Price" class="form-control price" readonly /></td>
+                                        <td><input type="number" name='total[]' placeholder='0.00' value="@(item.Book.Price * item.Count)" class="form-control total" readonly /></td>
                                     </tr>
+                                    i++;
                                 }
+                                <tr id='@("addr"+i.ToString())'></tr>
 
                             }
 
@@ -76,26 +76,50 @@
                         <tr>
                             <th class="text-center">Khách hàng</th>
                             <td class="text-center">
-                                <select name="customer" class="form-control" asp-items="ViewBag.Customer" id="select-customer">
+                                <select name="customer" class="form-control" asp-for="@Model.ApplicationUser.Id" asp-items="ViewBag.Customer" id="select-customer">
                                     <option value="">---chọn Khách hàng---</option>
                                 </select>
 
                             </td>
+
                         </tr>
 
                         <tr>
                             <th class="text-center">Tổng tiền</th>
                             <td class="text-center"><input type="number" name='total_amount' id="sub_total" placeholder='0.00' class="form-control" readonly /></td>
                         </tr>
+                        <tr>
+                            <th class="text-center">Ngày lập hóa đơn</th>
+                            <td class="text-center"><input type="date" name='time_create' id="time_create"  class="form-control" readonly value=@DateTime.Now.ToString("yyyy-MM-dd")></td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
+        </div>
+        @if (Model.IsDebit == true)
+        {
+            <div style="float:right">
+                <input type="checkbox" class="form-check-input" id="check_debit" name="check_debit" checked>
+                <label class="form-check-label" for="check_debit">Thêm nợ cho khách</label>
+            </div>
+        }
+        else if (Model.IsDebit == false && Model.ApplicationUser !=  null)
+        {
+            <div style="float:right">
+                <input type="checkbox" class="form-check-input" id="check_debit" name="check_debit" >
+                <label class="form-check-label" for="check_debit">Thêm nợ cho khách</label>
+            </div>
+        }
+        else
+        {
+            <div style="float:right">
+                <input type="checkbox" class="form-check-input" id="check_debit" name="check_debit" disabled>
+                <label class="form-check-label" for="check_debit">Thêm nợ cho khách</label>
+            </div>
+        }
 
-        </div>
-        <div style="float:right">
-            <input type="checkbox" class="form-check-input" id="check_debit" name="check_debit">
-            <label class="form-check-label" for="check_debit">Thêm nợ cho khách</label>
-        </div>
+
+
     </div>
     <input type="submit" class="btn btn-primary form-control" value="Tạo hóa đơn"/>
 </form>
