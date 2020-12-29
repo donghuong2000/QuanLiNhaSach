@@ -1,0 +1,21 @@
+﻿@model Book
+@{
+    ViewData["Title"] = "Index";
+}
+
+<div class="container">
+    <div class="row">
+        <img class="col-4 rounded" src="@Model.ImgUrl" alt="Alternate Text" />
+        <div class="col-8">
+            <h2>@Model.Name</h2>
+            <h5>danh mục: @Model.Category.Name</h5>
+            <h5>Mô tả:</h5>
+            <p>@Model.Decription</p>
+            <h6>Số lượng: @Model.Quantity</h6>
+            <h6>Tác giả: @Model.Author</h6>
+            <h6>Ngày xuất bản: @Model.DatePublish.ToShortDateString()</h6>
+            <h6>Giá tiền: @Model.Price VND</h6>
+        </div>
+    </div>
+</div>
+
