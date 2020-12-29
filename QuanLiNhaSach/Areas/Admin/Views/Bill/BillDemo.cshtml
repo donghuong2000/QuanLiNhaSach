@@ -59,7 +59,7 @@
                         <table class="table table-condensed">
                             <thead>
                                 <tr>
-                                    <td><strong>Item</strong></td>
+                                    <td><strong>Sách</strong></td>
                                     <td class="text-center"><strong>Giá tiền</strong></td>
                                     <td class="text-center"><strong>Số lượng</strong></td>
                                     <td class="text-right"><strong>Tổng cộng</strong></td>
@@ -101,6 +101,19 @@
                                     <td class="thick-line"></td>
                                     <td class="thick-line text-center"><h2><strong>Tổng tiền</strong></h2></td>
                                     <td class="thick-line text-right"><h2><strong>@Model.TotalPrice</strong></h2></td>
+                                </tr>
+                                <tr>
+                                    <td class="no-line"></td>
+                                    <td class="no-line"></td>
+                                    <td class="no-line"></td>
+                                    @if (Model.IsDebit == true)
+                                    {
+                                        <td class="text-right"><h2><strong>Khách Nợ</strong></h2></td>
+                                    }
+                                    else
+                                    {
+                                        <td class="text-right"><h2><strong>Khách trả tiền </strong></h2></td>
+                                    }
                                 </tr>
 
                             </tbody>

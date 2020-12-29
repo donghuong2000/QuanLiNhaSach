@@ -15,6 +15,7 @@ namespace QuanLiNhaSach.Models
         public string StaffId { get; set; }
         public DateTime DateCreate { get; set; }
         public float TotalPrice { get; set; }
+        public bool IsDebit { get; set; }
 
         public virtual AppUser ApplicationUser { get; set; }
         public virtual AppUser Staff { get; set; }
