@@ -14,6 +14,7 @@
                         <tr>
                             <th class="text-center"> # </th>
                             <th class="text-center"> Tên Sách </th>
+                            <th class="text-center"> Thể loại </th>
                             <th class="text-center"> Số lượng </th>
                             <th class="text-center"> Giá </th>
                             <th class="text-center"> tổng tiền </th>
@@ -30,6 +31,7 @@
                                             <option value="">---chọn sách---</option>
                                         </select>
                                     </td>
+                                    <td><input type="text" class="form-control category" readonly /></td>
                                     <td><input type="number" name='qty[]' placeholder='Nhập số lượng' class="form-control qty" step="0" min="0" /></td>
                                     <td><input type="number" name='price[]' placeholder='0.00' class="form-control price" readonly /></td>
                                     <td><input type="number" name='total[]' placeholder='0.00' class="form-control total" readonly /></td>
@@ -47,6 +49,7 @@
                                                 <option value="">---chọn sách---</option>
                                             </select>
                                         </td>
+                                        <td><input type="text" value=" @item.Book.Category.Name" class="form-control category" readonly /></td>
                                         <td><input type="number" name='qty[]' placeholder='Nhập số lượng' value="@item.Count" class="form-control qty" step="0" min="0" /></td>
                                         <td><input type="number" name='price[]' placeholder='0.00' value="@item.Book.Price" class="form-control price" readonly /></td>
                                         <td><input type="number" name='total[]' placeholder='0.00' value="@(item.Book.Price * item.Count)" class="form-control total" readonly /></td>
@@ -90,7 +93,7 @@
                         </tr>
                         <tr>
                             <th class="text-center">Ngày lập hóa đơn</th>
-                            <td class="text-center"><input type="datetime-local" name='time_create' id="time_create"  class="form-control" value=@ViewBag.DateCreate ></td>
+                            <td class="text-center"><input type="datetime-local" name='time_create' id="time_create"  class="form-control" value=@ViewBag.DateCreate  readonly></td>
                         </tr>
                     </tbody>
                 </table>

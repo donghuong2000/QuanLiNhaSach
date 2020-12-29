@@ -124,7 +124,7 @@ namespace QuanLiNhaSach.Areas.Admin.Controllers
                         BillId = bill.Id,
                         BookId = listbilldetail_update[i].BookId,
                         Count = listbilldetail_update[i].Count,
-                        Book = _db.Books.AsNoTracking().FirstOrDefault(x => x.Id == listbilldetail_update[i].BookId)
+                        Book = _db.Books.AsNoTracking().Include(x=>x.Category).FirstOrDefault(x => x.Id == listbilldetail_update[i].BookId)
                     });
                 }
 
@@ -139,6 +139,10 @@ namespace QuanLiNhaSach.Areas.Admin.Controllers
                 if (product.Contains(null))
                 {
                     throw new Exception("Không được để hàng trống");
+                }
+                if(qty.Contains(0))
+                {
+                    throw new Exception("Không được để số lượng của sách = 0");
                 }
                 if (customer == null)
                 {
@@ -180,12 +184,12 @@ namespace QuanLiNhaSach.Areas.Admin.Controllers
         public IActionResult GetBookPrice(string id)
         {
             
-                var book = _db.Books.Find(id);
+                var book = _db.Books.Include(x=>x.Category).FirstOrDefault(x=>x.Id == id);
                 if(book!=null)
                 {
-                    return Json(new { success = true, price = book.Price });
+                    return Json(new { success = true, price = book.Price , category = book.Category.Name });
                 }
-                return Json(new { success = false, price = 0 });
+                return Json(new { success = false, price = 0,category = ""  });
             
         }
 
@@ -298,8 +302,12 @@ namespace QuanLiNhaSach.Areas.Admin.Controllers
             List<BillDetail> listbilldetail = new List<BillDetail>();
             for (int i = 0; i < product.Length; i++)
             {
-                BillDetail billdetail = new BillDetail() {BookId = product[i], Count = quantity[i] }; 
-                listbilldetail.Add(billdetail);
+                if (product[i] != null)
+                {
+                    BillDetail billdetail = new BillDetail() { BookId = product[i], Count = quantity[i] };
+                    listbilldetail.Add(billdetail);
+                }
+                
             } // tao ra 1 list product tu 2 mang product va quantity
             var newlistbilldetail = listbilldetail.GroupBy(x => x.BookId)
                 .Select(x => new
@@ -311,6 +319,11 @@ namespace QuanLiNhaSach.Areas.Admin.Controllers
             var listbilldetail_update = newlistbilldetail.Select(x => new BillDetail { BookId = x.bookid, Count = x.count }).ToList();
             return listbilldetail_update;
         }
+        //private void standard_list_debit_detail_after_add_or_update() // chuẩn hóa danh sách debit detail khi add thêm nợ cho 1 debit detail, hoặc tạo mới 1 debit detail
+        //{
+        //    var list_debit_detail = _db.DebitDetails.ToList();
+        //    foreach()
+        //}
         
     }
 }

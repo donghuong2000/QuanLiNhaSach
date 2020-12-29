@@ -29,5 +29,10 @@ namespace QuanLiNhaSach.Models
         public virtual ICollection<BillDetail> BillDetail { get; set; }
         public virtual ICollection<BookEntryTicketDetail> BookEntryTicketDetail { get; set; }
         public virtual ICollection<BookExistHeader> BookExistHeader { get; set; }
+
+        public object include()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

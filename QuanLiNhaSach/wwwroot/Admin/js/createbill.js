@@ -69,15 +69,19 @@ $('#mytable').on('change','.select-book',function () {
 	var parent = $(this).parent().parent();
 	var valueSelected = optionSelected.val();
 	var price = parent.find('.price');
+	var category = parent.find('.category')
 	$.ajax({
 		method: 'get',
 		url: '/admin/bill/getbookprice/' + valueSelected,
 		success: function (data) {
 			if (data.success) {
 				price.val(data.price);
+				category.val(data.category);
 			}
-			else
+			else {
 				price.val(data.price);
+				category.val(data.category);
+			}
 			calc();
         }
     })
