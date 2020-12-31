@@ -94,8 +94,23 @@
                 <h6 class="collapse-header">Chức năng:</h6>
                 <a class="collapse-item" asp-action="Index" asp-controller="book">Danh sách Sách</a>
                 <a class="collapse-item" href="/Admin/book/upsert">Tạo Sách</a>
-                <a class="collapse-item" href="/Admin/book/upsert">Tạo phiếu nhập sách</a>
 
+            </div>
+        </div>
+    </li>
+    <!-- Nav Item - nhập Sách Collapse Menu -->
+    <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsenhapsach"
+           aria-expanded="true" aria-controls="collapsenhapsach">
+            <i class="fas fa-file-import"></i>
+            <span>Quản lí nhập sách</span>
+        </a>
+        <div id="collapsenhapsach" class="collapse" aria-labelledby="headingsach"
+             data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <h6 class="collapse-header">Chức năng:</h6>
+                <a class="collapse-item" asp-action="Index" asp-controller="bookentryticket">Danh sách phiếu nhập sách</a>
+                <a class="collapse-item" href="/Admin/bookentryticket/Create">Tạo phiếu nhập Sách</a>
             </div>
         </div>
     </li>
@@ -128,7 +143,7 @@
             <div class="bg-white py-2 collapse-inner rounded">
                 <h6 class="collapse-header">Chức năng:</h6>
                 <a class="collapse-item" asp-action="Index" asp-controller="rule">Danh sách quy định</a>
-               
+
 
             </div>
         </div>
