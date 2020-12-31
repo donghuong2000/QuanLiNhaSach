@@ -1,0 +1,115 @@
+﻿@model QuanLiNhaSach.Models.BookEntryTicket
+
+@{
+    ViewData["Title"] = "Xác nhận phiếu nhập sách";
+}
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="invoice-title">
+                <h2>PHIẾU NHẬP SÁCH</h2><h3 class="pull-right"> # @Model.Id</h3>
+            </div>
+            <hr>
+            <div class="row">
+                @*<div class="col-md-6">
+                    <address>
+                        <strong>thông tin người lập hóa đơn:</strong><br>
+                        @Model.Staff.FullName<br>
+                        @Model.Staff.Email<br>
+
+                    </address>
+                </div>*@
+            </div>
+            <div class="row">
+                <div class="col-md-6 text-right">
+                    <address>
+                        <strong>Ngày nhập sách</strong><br>
+                        @Model.DateEntry<br><br>
+                    </address>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title"><strong>Chi tiết phiếu nhập sách</strong></h3>
+                </div>
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table class="table table-condensed">
+                            <thead>
+                                <tr>
+                                    <td><strong>Sách</strong></td>
+                                    <td class="text-center"><strong>Thể loại</strong></td>
+                                    <td class="text-center"><strong>Tác giả</strong></td>
+                                    <td class="text-right"><strong>Số lượng</strong></td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- foreach ($order->lineItems as $line) or some such thing here -->
+                                @foreach (var item in Model.BookEntryTicketDetail)
+                                {
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <a href="#">
+                                                    <img height="100" width="70" class="rounded" src="@item.Book.ImgUrl" />
+                                                    <span> @item.Book.Name</span>
+                                                </a>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div style="margin-top:16%" class="text-center">
+                                                @item.Book.Category.Name
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div style="margin-top:21%" class="text-center">
+                                                @item.Book.Author
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div style="margin-top:21%" class="text-right">
+                                                @item.Count
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                                
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <a asp-action="TicketDemoCancel" class="btn btn-danger col-6">Hủy phiếu nhập sách</a>
+        <a asp-action="TicketDemoConfirm" class="btn btn-primary col-6">Xác nhận phiếu nhập sách</a>
+    </div>
+</div>
+
+@section Header{
+    <style>
+        .invoice-title h2, .invoice-title h3 {
+            display: inline-block;
+        }
+
+        .table > tbody > tr > .no-line {
+            border-top: none;
+        }
+
+        .table > thead > tr > .no-line {
+            border-bottom: none;
+        }
+
+        .table > tbody > tr > .thick-line {
+            border-top: 2px solid;
+        }
+    </style>
+
+}
+
