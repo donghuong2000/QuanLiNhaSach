@@ -90,19 +90,19 @@ namespace QuanLiNhaSach.Areas.Admin.Controllers
 
         private void Add_SelectList_For_ViewBag()
         {
-            ViewBag.Books = new SelectList(_db.Books.ToList(), "Id", "Name", "Category", "Author");
+            ViewBag.Books = new SelectList(_db.Books.ToList(), "Id", "Name");
         }
 
         [HttpPost]
         public IActionResult Create(string[] product, int[] qty, string[] category)
-            {
+        {
+            BookEntryTicket ticket = new BookEntryTicket();
             if (product.Contains(null) || qty.Contains(0))
             {
                 ModelState.AddModelError("", "Vui lòng chọn sách và nhập số lượng đầy đủ");
                 Add_SelectList_For_ViewBag();
-                return View();
+                return View(ticket);
             }
-            BookEntryTicket ticket = new BookEntryTicket();
             try
             {
                 List<BookEntryTicketDetail> ticketDetails = new List<BookEntryTicketDetail>();
@@ -114,7 +114,7 @@ namespace QuanLiNhaSach.Areas.Admin.Controllers
                         BookEntryTicketId = ticket.Id,
                         BookId = listticketdetail_update[i].BookId,
                         Count = listticketdetail_update[i].Count,
-                        Book = _db.Books.AsNoTracking().FirstOrDefault(x => x.Id == product[i]),
+                        Book = _db.Books.Include(x => x.Category).AsNoTracking().FirstOrDefault(x => x.Id == product[i]),
                     }); ;
                 }
                 ticket.BookEntryTicketDetail = ticketDetails;
@@ -122,7 +122,6 @@ namespace QuanLiNhaSach.Areas.Admin.Controllers
                 ticket.DateEntry = DateTime.Now;
 
                 check_rule_1(ticket);
-
                 HttpContext.Session.SetObject("ticket", ticket);
                 return RedirectToAction("TicketDemo");
             }
@@ -133,10 +132,7 @@ namespace QuanLiNhaSach.Areas.Admin.Controllers
                 return View(ticket);
 
             }
-
-
         }
-
         private List<BookEntryTicketDetail> Get_List_Ticket_Detail_Standardized_Quantity(string[] product, int[] qty)
         {
             List<BookEntryTicketDetail> listticketdetail = new List<BookEntryTicketDetail>();
