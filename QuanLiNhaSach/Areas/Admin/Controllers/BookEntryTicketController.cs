@@ -109,13 +109,15 @@ namespace QuanLiNhaSach.Areas.Admin.Controllers
                 var listticketdetail_update = Get_List_Ticket_Detail_Standardized_Quantity(product, qty);
                 for (int i = 0; i < listticketdetail_update.Count; i++)
                 {
-                    ticketDetails.Add(new BookEntryTicketDetail
+                    var obj = new BookEntryTicketDetail
                     {
                         BookEntryTicketId = ticket.Id,
                         BookId = listticketdetail_update[i].BookId,
                         Count = listticketdetail_update[i].Count,
-                        Book = _db.Books.Include(x => x.Category).AsNoTracking().FirstOrDefault(x => x.Id == product[i]),
-                    }); ;
+                        Book = _db.Books.AsNoTracking().Include(x => x.Category).FirstOrDefault(x => x.Id == product[i]),
+                    };
+                    obj.Book.Category.Books = null;
+                    ticketDetails.Add(obj);
                 }
                 ticket.BookEntryTicketDetail = ticketDetails;
                 ticket.Id = Guid.NewGuid().ToString();

@@ -47,7 +47,7 @@
                                                 <option value="">---chọn sách---</option>
                                             </select>
                                         </td>
-                                        <td><input type="text" name='category[]' placeholder='tên loại sách'  class="form-control category" readonly /></td>
+                                        <td><input type="text" name='category[]' placeholder='tên loại sách' value="@item.Book.Category.Name"  class="form-control category" readonly /></td>
                                         <td><input type="text" name='author' placeholder='tên tác giả' value="@item.Book.Author"  class="form-control author" readonly /></td>
                                         <td><input type="number" name='qty[]' placeholder='Nhập số lượng'  value="@item.Count" class="form-control qty" step="0" min="0" /></td>
                                     </tr>
