@@ -1,14 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using QuanLiNhaSach.Data;
 using QuanLiNhaSach.Models;
 using QuanLiNhaSach.Utility;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
 
 namespace QuanLiNhaSach.Areas.Admin.Controllers
 {
@@ -49,11 +48,11 @@ namespace QuanLiNhaSach.Areas.Admin.Controllers
                 .Include(x => x.Staff)
                 .FirstOrDefault(x => x.Id == id);
 
-            if(bill == null)
+            if (bill == null)
             {
                 return NotFound();
             }
-            var billDetails = _db.BillDetails.Include(x=>x.Book).Where(x=>x.BillId==id).Select(x=>x).ToList();
+            var billDetails = _db.BillDetails.Include(x => x.Book).Where(x => x.BillId == id).Select(x => x).ToList();
 
             bill.BillDetail = billDetails;
             return View(bill);
@@ -81,25 +80,25 @@ namespace QuanLiNhaSach.Areas.Admin.Controllers
             var newBillDetail = bill.BillDetail.Select(x => new BillDetail { BillId = x.BillId, BookId = x.BookId, Count = x.Count }).ToList();
 
             bill.BillDetail = newBillDetail;
-           
+
             _db.Bills.Add(bill);
             _db.SaveChanges();
             return RedirectToAction("Index");
         }
         [HttpPost]
-        public IActionResult Create(string[] product,int[] qty,string customer,float total_amount)
+        public IActionResult Create(string[] product, int[] qty, string customer, float total_amount)
         {
 
-            if(product.Contains(null))
+            if (product.Contains(null))
             {
                 ModelState.AddModelError("", "Không được để hàng trống");
                 return View();
             }
-            if(customer==null)
+            if (customer == null)
             {
                 ModelState.AddModelError("", "Vui lòng chọn user");
                 return View();
-            }    
+            }
             //get current userId
             ClaimsPrincipal currentUser = this.User;
             var currentUserID = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
@@ -115,11 +114,12 @@ namespace QuanLiNhaSach.Areas.Admin.Controllers
             List<BillDetail> billDetails = new List<BillDetail>();
             for (int i = 0; i < product.Length; i++)
             {
-                billDetails.Add(new BillDetail 
-                {   BillId = bill.Id,
-                    BookId = product[i], 
-                    Count = qty[i], 
-                    Book = _db.Books.AsNoTracking().FirstOrDefault(x=>x.Id == product[i]) 
+                billDetails.Add(new BillDetail
+                {
+                    BillId = bill.Id,
+                    BookId = product[i],
+                    Count = qty[i],
+                    Book = _db.Books.AsNoTracking().FirstOrDefault(x => x.Id == product[i])
                 });
             }
 
@@ -133,21 +133,21 @@ namespace QuanLiNhaSach.Areas.Admin.Controllers
 
         public IActionResult GetBookPrice(string id)
         {
-           
-                var book = _db.Books.Find(id);
-                if(book!=null)
-                {
-                    return Json(new { success = true, price = book.Price });
-                }
-                return Json(new { success = false, price = 0 });
-            
+
+            var book = _db.Books.Find(id);
+            if (book != null)
+            {
+                return Json(new { success = true, price = book.Price });
+            }
+            return Json(new { success = false, price = 0 });
+
         }
 
         public IActionResult Create()
         {
 
             ViewBag.Books = new SelectList(_db.Books.ToList(), "Id", "Name");
-            ViewBag.Customer= new SelectList(_db.AppUsers.ToList(), "Id", "FullName");
+            ViewBag.Customer = new SelectList(_db.AppUsers.ToList(), "Id", "FullName");
             return View();
         }
     }

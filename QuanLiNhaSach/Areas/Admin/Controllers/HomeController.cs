@@ -1,16 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using QuanLiNhaSach.Data;
+using System;
+using System.Linq;
 
 namespace QuanLiNhaSach.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize(Roles="Admin")]
+    [Authorize(Roles = "Admin")]
     public class HomeController : Controller
     {
         private readonly ApplicationDbContext _db;
@@ -20,19 +17,43 @@ namespace QuanLiNhaSach.Areas.Admin.Controllers
         }
         public IActionResult Index()
         {
-
-            var obj1 = _db.Categories.Include(x => x.Books).Select(x => x.Name).ToArray();
-            var obj = _db.Categories.Include(x => x.Books).Select(x => x.Books.Count()).ToArray();
-
-            ViewBag.label = "[\""+String.Join("\",\"",obj1)+"\"]";
-            ViewBag.data = "[" + String.Join(",", obj) + "]";
-
-
-
             return View();
         }
+        // thống kê nợ khách hàng
+        public IActionResult Statistical_DeptCustomer(string id)
+        {
+            // lấy nợ của tất cả
+            if (id == null)
+            {
 
-        
+                var obj = _db.AppUsers.ToList();
+                var values = obj.Select(x => x.Dept).ToArray();
+                var labels = obj.Select(x => x.UserName).ToArray();
+
+                return Json(new { labels, values });
+            }
+            // lấy nợ theo tháng của 1 thàng nào đó
+            else
+            {
+                var labels = new string[12];
+                var values = new float[12];
+                var time = DateTime.Today;
+                // lấy 12 tháng kể từ ngày hiện tại
+                for (int i = 0; i < 12; i++)
+                {
+                    var month = time.AddMonths(i * -1).Month;
+                    labels[i] = month.ToString();
+                    //lấy cái nợ tương ứng với tháng đó
+                    values[i] = _db.DebitDetails.Where(x => x.Id == id && x.TimeRecord.Month == month).Sum(x => x.LastDebit);
+                }
+                return Json(new { labels, values });
+            }    
+            
+        }
+
+
+
+
     }
 
 }
