@@ -131,7 +131,7 @@
             </div>
         </div>
     </li>
-    <!-- Nav Item -Bill Collapse Menu -->
+    <!-- Nav Item -Quy định Collapse Menu -->
     <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseRule"
            aria-expanded="true" aria-controls="collapsesach">
@@ -145,6 +145,21 @@
                 <a class="collapse-item" asp-action="Index" asp-controller="rule">Danh sách quy định</a>
 
 
+            </div>
+        </div>
+    </li>
+    <!-- Nav Item - Nợ Collapse Menu -->
+    <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseDebit"
+           aria-expanded="true" aria-controls="collapseDebit">
+            <i class="fas fa-search-dollar"></i>
+            <span>Quản lí Nợ</span>
+        </a>
+        <div id="collapseDebit" class="collapse" aria-labelledby="headingDebit" data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <h6 class="collapse-header">Chức năng:</h6>
+                <a class="collapse-item" asp-action="Index" asp-controller="Debit">Danh sách Nợ</a>
+                @*<a class="collapse-item" href="/Admin/user/upsert">Tạo người dùng</a>*@
             </div>
         </div>
     </li>

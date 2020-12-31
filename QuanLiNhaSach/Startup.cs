@@ -50,7 +50,10 @@ namespace QuanLiNhaSach
                 options.IdleTimeout = TimeSpan.FromSeconds(10000);
                 options.Cookie.IsEssential = true;
             });
-            services.AddControllersWithViews();
+            services.AddControllersWithViews()
+                    .AddNewtonsoftJson(options =>
+                options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+            );
             services.AddRazorPages();
         }
 

@@ -1,18 +1,15 @@
 ﻿$(document).ready(function () {
-	var i = 1;
-	$("#add_row").click(function () {
-		b = i - 1;
-		$('#addr' + i).html($('#addr' + b).html()).find('td:first-child').html(i + 1);
-		$('#tab_logic').append('<tr id="addr' + (i + 1) + '"></tr>');
-		i++;
-	});
-	$("#delete_row").click(function () {
-		if (i > 1) {
-			$("#addr" + (i - 1)).html('');
-			i--;
-		}
-		calc();
-	});
+	calc();
+	var optionSelected = $('#select-customer').find(optionSelected)
+	var valueSelected = optionSelected.val();
+	if (valueSelected == "") {
+		document.getElementById("check_debit").disabled = true
+		console.log("true")
+	}
+	//document.getElementById("check_debit").disabled = true
+	//document.getElementById("check_debit").checked = false
+	
+	
 
 	$('#tab_logic tbody').on('keyup change', function () {
 		calc();
@@ -22,6 +19,25 @@
 	});
 
 
+});
+var i = $('#mytable tr').length - 1;
+$("#add_row").click(function () {
+	b = i - 1;
+	console.log(b)
+	var html = $('#addr0');
+	console.log(html)
+	$('#addr' + i).html($('#addr' + b).html()).find('td:first-child').html(i + 1);
+	$('#tab_logic').append('<tr id="addr' + (i + 1) + '"></tr>');
+	i++;
+	console.log(i)
+});
+$("#delete_row").click(function () {
+	if (i > 1) {
+		$("#addr" + (i - 1)).html('');
+		i--;
+	}
+	calc();
+	console.log(i)
 });
 
 function calc() {
@@ -53,17 +69,42 @@ $('#mytable').on('change','.select-book',function () {
 	var parent = $(this).parent().parent();
 	var valueSelected = optionSelected.val();
 	var price = parent.find('.price');
+	var category = parent.find('.category')
 	$.ajax({
 		method: 'get',
 		url: '/admin/bill/getbookprice/' + valueSelected,
 		success: function (data) {
 			if (data.success) {
 				price.val(data.price);
+				category.val(data.category);
 			}
-			else
+			else {
 				price.val(data.price);
+				category.val(data.category);
+			}
 			calc();
         }
     })
 	
+});
+
+
+$('#mycustomer').on('change', '#select-customer', function () {
+	var optionSelected = $(this).find("option:selected");
+	var parent = $(this).parent().parent();
+	var valueSelected = optionSelected.val();
+	console.log(valueSelected)
+	if (valueSelected == "") {
+		console.log("readonly")
+		document.getElementById("check_debit").disabled = true
+		document.getElementById("check_debit").checked = false
+    }
+		
+	else
+	{
+		console.log("not-readonly")
+		document.getElementById("check_debit").disabled = false
+    }
+		
+
 });
