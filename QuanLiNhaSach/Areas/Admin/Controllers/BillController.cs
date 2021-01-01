@@ -119,13 +119,15 @@ namespace QuanLiNhaSach.Areas.Admin.Controllers
                 var listbilldetail_update = Get_List_Bill_Detail_Standardized_Quantity(product, qty);
                 for (int i = 0; i < listbilldetail_update.Count; i++)
                 {
-                    billDetails.Add(new BillDetail
+                    var b = new BillDetail
                     {
                         BillId = bill.Id,
                         BookId = listbilldetail_update[i].BookId,
                         Count = listbilldetail_update[i].Count,
-                        Book = _db.Books.AsNoTracking().Include(x=>x.Category).FirstOrDefault(x => x.Id == listbilldetail_update[i].BookId)
-                    });
+                        Book = _db.Books.AsNoTracking().Include(x => x.Category).FirstOrDefault(x => x.Id == listbilldetail_update[i].BookId)
+                    };
+                    b.Book.Category.Books = null;
+                    billDetails.Add(b);
                 }
 
                 bill.BillDetail = billDetails;
