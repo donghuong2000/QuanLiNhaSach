@@ -43,8 +43,33 @@ function LoadDatable(data) {
             { "data": "lastdebit" },
         ]
     })
-
 }
+$('#button_update_debit').on('click', function () {
+    var time = $('#time_debit').val();
+    console.log(time)
+    $.ajax({
+        url: "/admin/debit/Update_List_Debit/" + time,
+        success: function (data) {
+            if (data.success) {
+                swalWithBootstrapButtons.fire(
+                    'Đã cập nhật thành công',
+                    data.message,
+                    'success'
+                );
+                $('#dataTable').DataTable().ajax.reload();
+            }
+            else {
+                swalWithBootstrapButtons.fire(
+                    'Đã update nợ rồi, không thể thực hiện lại',
+                    data.message,
+                    'error'
+                )
+            }
+        }
+
+    })
+
+});
 
 
 

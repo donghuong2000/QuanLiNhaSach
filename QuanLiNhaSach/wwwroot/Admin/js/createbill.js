@@ -74,7 +74,7 @@ $('#mytable').on('change','.select-book',function () {
 		method: 'get',
 		url: '/admin/bill/getbookprice/' + valueSelected,
 		success: function (data) {
-			if (data.success) {
+			if (data.success) { 
 				price.val(data.price);
 				category.val(data.category);
 			}

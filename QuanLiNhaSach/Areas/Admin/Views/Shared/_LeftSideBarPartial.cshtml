@@ -164,6 +164,22 @@
         </div>
     </li>
 
+    <!-- Nav Item - Phiếu thu tiền Collapse Menu -->
+    <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseReceipt"
+           aria-expanded="true" aria-controls="collapseReceipt">
+            <i class="fas fa-file-invoice-dollar"></i>
+            <span>Quản lí Phiếu Thu Tiền</span>
+        </a>
+        <div id="collapseReceipt" class="collapse" aria-labelledby="headingReceipt" data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <h6 class="collapse-header">Chức năng:</h6>
+                <a class="collapse-item" asp-action="Index" asp-controller="Receipt">Danh sách Phiếu thu tiền</a>
+                <a class="collapse-item" href="/Admin/Receipt/Create">Tạo phiếu thu tiền</a>
+            </div>
+        </div>
+    </li>
+
 
 
     <!-- Divider -->
