@@ -49,7 +49,7 @@ namespace QuanLiNhaSach.Areas.Admin.Controllers
             else
             {
                 var obj = _db.AppUsers.ToList();
-                var values = obj.Select(x => x.Dept).ToArray();
+                var values = obj.Select(x => x.new_last_debit).ToArray();
                 var labels = obj.Select(x => x.UserName).ToArray();
 
                 return Json(new { labels, values });
