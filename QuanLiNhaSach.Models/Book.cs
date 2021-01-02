@@ -12,7 +12,7 @@ namespace QuanLiNhaSach.Models
         {
             BillDetail = new HashSet<BillDetail>();
             BookEntryTicketDetail = new HashSet<BookEntryTicketDetail>();
-            BookExistHeader = new HashSet<BookExistHeader>();
+            BookExistDetail = new HashSet<BookExistDetail>();
         }
 
         public string Id { get; set; }
@@ -28,7 +28,7 @@ namespace QuanLiNhaSach.Models
         public virtual Category Category { get; set; }
         public virtual ICollection<BillDetail> BillDetail { get; set; }
         public virtual ICollection<BookEntryTicketDetail> BookEntryTicketDetail { get; set; }
-        public virtual ICollection<BookExistHeader> BookExistHeader { get; set; }
+        public virtual ICollection<BookExistDetail> BookExistDetail { get; set; }
 
         public object include()
         {

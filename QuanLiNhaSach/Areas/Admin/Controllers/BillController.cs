@@ -1,15 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
+
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using QuanLiNhaSach.Data;
 using QuanLiNhaSach.Models;
 using QuanLiNhaSach.Utility;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
 
 namespace QuanLiNhaSach.Areas.Admin.Controllers
 {
@@ -52,11 +53,11 @@ namespace QuanLiNhaSach.Areas.Admin.Controllers
                 .Include(x => x.Staff)
                 .FirstOrDefault(x => x.Id == id);
 
-            if(bill == null)
+            if (bill == null)
             {
                 return NotFound();
             }
-            var billDetails = _db.BillDetails.Include(x=>x.Book).Where(x=>x.BillId==id).Select(x=>x).ToList();
+            var billDetails = _db.BillDetails.Include(x => x.Book).Where(x => x.BillId == id).Select(x => x).ToList();
 
             bill.BillDetail = billDetails;
             return View(bill);
@@ -81,11 +82,39 @@ namespace QuanLiNhaSach.Areas.Admin.Controllers
             try
             {
                 check_rule_2(bill);
+
+                bill.ApplicationUser = null;
+                bill.Staff = null;
+                var newBillDetail = bill.BillDetail.Select(x => new BillDetail { BillId = x.BillId, BookId = x.BookId, Count = x.Count }).ToList();
+                bill.BillDetail = newBillDetail;
+                // add bill 
+                _db.Bills.Add(bill);
+                foreach (var item in bill.BillDetail)
+                {
+                    var b = _db.Books.Find(item.BookId);
+                    b.Quantity -= item.Count;
+                }
+                if (bill.IsDebit == true) // người dùng chọn nợ thay vì trả tiền mặt
+                {
+                    var result = Creat_Or_Update_Debit(bill); // tạo nợ mới - nếu tháng đó chưa nợ , hoặc update nợ cho incurred của tháng nợ đó nếu đã có 
+                    if (result == true)
+                    {
+                        var user = _db.AppUsers.FirstOrDefault(x => x.Id == bill.ApplicationUserId);
+                        user.Dept += bill.TotalPrice;
+                        _db.AppUsers.Update(user);
+                        _db.SaveChanges(); // thêm nợ cho khách hàng
+                    }
+
+
+                }
+                _db.SaveChanges();
+                return RedirectToAction("Index");
             }
             catch (Exception e)
             {
                 ModelState.AddModelError("", e.Message);
                 Add_SelectList_For_ViewBag();
+
                 return RedirectToAction("Create",new { bill = bill });
             }
             bill.ApplicationUser = null;
@@ -101,12 +130,11 @@ namespace QuanLiNhaSach.Areas.Admin.Controllers
                 user.new_last_debit = user.new_first_debit + user.new_incurred_debit; 
                 _db.AppUsers.Update(user);
                 _db.SaveChanges(); // thêm nợ cho khách hàng
+
             }
-            _db.SaveChanges();
-            return RedirectToAction("Index");
         }
         [HttpPost]
-        public IActionResult Create(string[] product,int[] qty,string customer,float total_amount,string check_debit,DateTime time_create) // check_debit : có check là on , uncheck là null
+        public IActionResult Create(string[] product, int[] qty, string customer, float total_amount, string check_debit, DateTime time_create) // check_debit : có check là on , uncheck là null
         {
             Bill bill = new Bill();
             try
@@ -134,11 +162,12 @@ namespace QuanLiNhaSach.Areas.Admin.Controllers
                     isdebit = true;
                 bill.IsDebit = isdebit;
 
+
                 if (product.Contains(null))
                 {
                     throw new Exception("Không được để hàng trống");
                 }
-                if(qty.Contains(0))
+                if (qty.Contains(0))
                 {
                     throw new Exception("Không được để số lượng của sách = 0");
                 }
@@ -151,7 +180,7 @@ namespace QuanLiNhaSach.Areas.Admin.Controllers
                 var currentUserID = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
                 //get current userId
                 var user = _db.AppUsers.AsNoTracking().FirstOrDefault(x => x.Id == currentUserID);
-                
+
                 //bill = new Bill() { ApplicationUserId = cus.Id, ApplicationUser = cus, Id = Guid.NewGuid().ToString(), Staff = user, StaffId = user.Id, DateCreate = DateTime.Now, TotalPrice = total_amount, IsDebit = isdebit };
                 bill.ApplicationUserId = cus.Id;
                 bill.Id = Guid.NewGuid().ToString();
@@ -165,30 +194,33 @@ namespace QuanLiNhaSach.Areas.Admin.Controllers
                 HttpContext.Session.SetObject("bill", bill);
                 return RedirectToAction("BillDemo");
             }
-            
+
             catch (Exception e)
             {
+
+
 
                 ModelState.AddModelError("", e.Message);
                 Add_SelectList_For_ViewBag();
                 return View(bill);
-                
+
             }
 
-            
+
         }
 
 
         public IActionResult GetBookPrice(string id)
         {
-            
-                var book = _db.Books.Include(x=>x.Category).FirstOrDefault(x=>x.Id == id);
-                if(book!=null)
-                {
-                    return Json(new { success = true, price = book.Price , category = book.Category.Name });
-                }
-                return Json(new { success = false, price = 0,category = ""  });
-            
+
+
+            var book = _db.Books.Include(x => x.Category).FirstOrDefault(x => x.Id == id);
+            if (book != null)
+            {
+                return Json(new { success = true, price = book.Price, category = book.Category.Name });
+            }
+            return Json(new { success = false, price = 0, category = "" });
+
         }
 
         public IActionResult Create(Bill bill)
@@ -214,6 +246,7 @@ namespace QuanLiNhaSach.Areas.Admin.Controllers
         //    foreach (var item in list_debit_detail)
         //    {
         //        //var time = item.TimeRecord.ToString("MM-yyyy");
+
 
         //        // tồn tại tháng nợ trùng hóa đơn
         //        if (item.TimeRecord.ToString("MM-yyyy") == bill.DateCreate.ToString("MM-yyyy")) // tìm thằng mã nợ có tháng trùng với tháng của hóa đơn, và người mua hóa đơn là người nợ của mã đó
@@ -274,6 +307,7 @@ namespace QuanLiNhaSach.Areas.Admin.Controllers
         //    //return true;
         //}
         
+
         //public float Find_First_Debit_Of_User(Bill bill)
         //{
         //    var list_debit_detail = _db.DebitDetails.ToList();
@@ -299,24 +333,26 @@ namespace QuanLiNhaSach.Areas.Admin.Controllers
                 {
                     if (_db.Books.Find(item.BookId).Quantity - item.Count - rule.Max < 0) // số lượng tồn sau khi bán của sách nếu có sử dụng rule 2 mà < số lượng tồn sau khi bán(quy định) thì sẽ văng ra lỗi
                     {
-                        throw new Exception("Cuốn sách có tên \" " + item.Book.Name + " \" vi phạm quy định số hai" + ",số lượng tồn kho của sách sau khi bán phải từ " + rule.Max + " quyển trở lên (Chỉ có thể mua tối đa " + (_db.Books.Find(item.BookId).Quantity - rule.Max) + " quyển)" );
+                        throw new Exception("Cuốn sách có tên \" " + item.Book.Name + " \" vi phạm quy định số hai" + ",số lượng tồn kho của sách sau khi bán phải từ " + rule.Max + " quyển trở lên (Chỉ có thể mua tối đa " + (_db.Books.Find(item.BookId).Quantity - rule.Max) + " quyển)");
                     }
                 }
                 if (bill.ApplicationUser.new_last_debit > rule.Min) // nếu nợ của khách lớn hơn quy định cho phép
                     throw new Exception("Chỉ bán cho khách hàng có nợ không  quá" + rule.Min + "đồng");
+
                 else if (bill.IsDebit == true && (bill.ApplicationUser.new_last_debit + bill.TotalPrice > rule.Min)) // nếu nợ của khách nhỏ hơn quy định cho phép nhưng khách lại muốn tiếp tục nợ mà tiền sách nợ + với nợ cũ lớn hơn quy định cho phép thì cũng không bán
                     throw new Exception("Khách hàng hiện đang nợ " + bill.ApplicationUser.new_last_debit + " đồng. Nếu tiếp tục mua nợ thì nợ của khách hàng sẽ là " + (bill.ApplicationUser.new_last_debit + bill.TotalPrice) + " đồng.Vi phạm quy định 2. Để tiếp tục giao dịch, Vui lòng thanh toán nợ cho thủ thư,hoặc chọn phương thức mua không nợ");
              }
+
             else // nếu không sử dụng rule 2
             {
                 // kiểm tra xem số lượng đặt mua có lớn hơn só lượng tồn của kho sách không
-                foreach(var item in bill.BillDetail)
+                foreach (var item in bill.BillDetail)
                 {
-                    if(item.Count > _db.Books.Find(item.BookId).Quantity)
+                    if (item.Count > _db.Books.Find(item.BookId).Quantity)
                     {
                         throw new Exception("Cuốn sách có tên \" " + item.Book.Name + " \" có số lượng tồn kho không đủ để thực hiện tạo hóa đơn, ( Chỉ có thể mua tối đa " + _db.Books.Find(item.BookId).Quantity + " quyển )");
                     }
-                }    
+                }
             }
         }
         private List<BillDetail> Get_List_Bill_Detail_Standardized_Quantity(string[] product, int[] quantity)
@@ -329,7 +365,8 @@ namespace QuanLiNhaSach.Areas.Admin.Controllers
                     BillDetail billdetail = new BillDetail() { BookId = product[i], Count = quantity[i] };
                     listbilldetail.Add(billdetail);
                 }
-                
+
+
             } // tao ra 1 list product tu 2 mang product va quantity
             var newlistbilldetail = listbilldetail.GroupBy(x => x.BookId)
                 .Select(x => new
@@ -340,12 +377,13 @@ namespace QuanLiNhaSach.Areas.Admin.Controllers
 
             var listbilldetail_update = newlistbilldetail.Select(x => new BillDetail { BookId = x.bookid, Count = x.count }).ToList();
             return listbilldetail_update;
+
         }
         //private void standard_list_debit_detail_after_add_or_update() // chuẩn hóa danh sách debit detail khi add thêm nợ cho 1 debit detail, hoặc tạo mới 1 debit detail
         //{
         //    var list_debit_detail = _db.DebitDetails.ToList();
         //    foreach()
         //}
-        
+
     }
 }

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using QuanLiNhaSach.Data;
 
 namespace QuanLiNhaSach.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210101142105_fixcol")]
+    partial class fixcol
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -432,7 +434,6 @@ namespace QuanLiNhaSach.Data.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ApplicationUserId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)")
                         .HasMaxLength(450);
 
@@ -488,18 +489,12 @@ namespace QuanLiNhaSach.Data.Migrations
                     b.Property<DateTime>("DateOfBirth")
                         .HasColumnType("date");
 
+                    b.Property<float>("Dept")
+                        .HasColumnType("real");
+
                     b.Property<string>("FullName")
                         .HasColumnType("nvarchar(450)")
                         .HasMaxLength(450);
-
-                    b.Property<float>("new_first_debit")
-                        .HasColumnType("real");
-
-                    b.Property<float>("new_incurred_debit")
-                        .HasColumnType("real");
-
-                    b.Property<float>("new_last_debit")
-                        .HasColumnType("real");
 
                     b.HasDiscriminator().HasValue("AppUser");
                 });
@@ -632,9 +627,7 @@ namespace QuanLiNhaSach.Data.Migrations
                     b.HasOne("QuanLiNhaSach.Models.AppUser", "ApplicationUser")
                         .WithMany("Receipt")
                         .HasForeignKey("ApplicationUserId")
-                        .HasConstraintName("FK_Receipt_APPUSER")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasConstraintName("FK_Receipt_APPUSER");
                 });
 #pragma warning restore 612, 618
         }
