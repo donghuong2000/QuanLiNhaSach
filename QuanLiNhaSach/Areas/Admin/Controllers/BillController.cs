@@ -1,5 +1,7 @@
+
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using QuanLiNhaSach.Data;
@@ -103,6 +105,7 @@ namespace QuanLiNhaSach.Areas.Admin.Controllers
                         _db.SaveChanges(); // thêm nợ cho khách hàng
                     }
 
+
                 }
                 _db.SaveChanges();
                 return RedirectToAction("Index");
@@ -143,6 +146,7 @@ namespace QuanLiNhaSach.Areas.Admin.Controllers
                     isdebit = true;
                 bill.IsDebit = isdebit;
 
+
                 if (product.Contains(null))
                 {
                     throw new Exception("Không được để hàng trống");
@@ -178,6 +182,8 @@ namespace QuanLiNhaSach.Areas.Admin.Controllers
             catch (Exception e)
             {
 
+
+
                 ModelState.AddModelError("", e.Message);
                 Add_SelectList_For_ViewBag();
                 return View(bill);
@@ -190,6 +196,7 @@ namespace QuanLiNhaSach.Areas.Admin.Controllers
 
         public IActionResult GetBookPrice(string id)
         {
+
 
             var book = _db.Books.Include(x => x.Category).FirstOrDefault(x => x.Id == id);
             if (book != null)
@@ -280,6 +287,7 @@ namespace QuanLiNhaSach.Areas.Admin.Controllers
                 _db.SaveChanges();
             }
             return true;
+
         }
         //public float Find_First_Debit_Of_User(Bill bill)
         //{
@@ -337,6 +345,7 @@ namespace QuanLiNhaSach.Areas.Admin.Controllers
                     listbilldetail.Add(billdetail);
                 }
 
+
             } // tao ra 1 list product tu 2 mang product va quantity
             var newlistbilldetail = listbilldetail.GroupBy(x => x.BookId)
                 .Select(x => new
@@ -347,6 +356,7 @@ namespace QuanLiNhaSach.Areas.Admin.Controllers
 
             var listbilldetail_update = newlistbilldetail.Select(x => new BillDetail { BookId = x.bookid, Count = x.count }).ToList();
             return listbilldetail_update;
+
         }
         //private void standard_list_debit_detail_after_add_or_update() // chuẩn hóa danh sách debit detail khi add thêm nợ cho 1 debit detail, hoặc tạo mới 1 debit detail
         //{
