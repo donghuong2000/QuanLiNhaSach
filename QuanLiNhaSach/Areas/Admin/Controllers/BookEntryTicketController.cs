@@ -211,7 +211,7 @@ namespace QuanLiNhaSach.Areas.Admin.Controllers
                 BookExistDetail existdetail = null;
                 int qtyEntry = bookin.Count;
                 DateTime nearest_record = bookin.Book.DatePublish;
-                var list_exist_record = _db.BookExistDetails.Where(x => x.BookExistHeaderId == bookin.BookId).ToList();
+                var list_exist_record = _db.BookExistDetails.Where(x => x.BookId == bookin.BookId).ToList();
                 bool check_break = false;
                 foreach( var item in list_exist_record)
                 {
@@ -243,7 +243,7 @@ namespace QuanLiNhaSach.Areas.Admin.Controllers
                         list_month.Add(DateTime.Parse(dt.ToString("MM-yyyy")));
                     }
                     BookExistDetail newexist = new BookExistDetail();
-                    newexist.BookExistHeaderId = bookin.Book.Id;
+                    newexist.BookId = bookin.Book.Id;
                     newexist.TimeRecord = DateTime.Parse(ticket.DateEntry.ToString("MM-yyyy"));
                     if (existdetail != null) //nếu đã từng nhập sách, list_exist_record không null
                     {
