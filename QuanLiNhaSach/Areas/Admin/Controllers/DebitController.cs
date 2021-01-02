@@ -49,12 +49,18 @@ namespace QuanLiNhaSach.Areas.Admin.Controllers
         public IActionResult Create_List_Debit(string id) // hàm sẽ tạo debit detail từ new first debit, new incurred debit , new last debit của user
         {
             var timenow = DateTime.Parse(id); // biến string nhập vào là 1 ngày
+            var result = IsAvailable_DebitDetail_Has_Time(timenow);
+            if (result == false)
+                return Json(new { success = false, message = "Đã tạo báo cáo của tháng này rồi, vui lòng không tạo lại" });
+            if((timenow - DateTime.Now).TotalDays > 0)
+                return Json(new { success = false, message = "Thời gian hiện tại chưa tới tháng cần tạo báo cáo, vui lòng chọn lại" });
             var customerlist = _usermanager.GetUsersInRoleAsync("Customer").Result; // tạo 1 list customer role là khách hàng từ list user
             DebitDetail debitdetail = new DebitDetail();
             foreach (var item in customerlist)
             {
                 if (item.new_last_debit != 0)
                 {
+                    
                     debitdetail.Id = Guid.NewGuid().ToString();
                     debitdetail.ApplicationUserId = item.Id;
                     debitdetail.TimeRecord = timenow;
@@ -70,8 +76,20 @@ namespace QuanLiNhaSach.Areas.Admin.Controllers
                     _db.SaveChanges();
                 }
             }
-            return Json(new { success = true}); 
+            return Json(new { success = true ,message = "Tạo báo cáo thành công"}) ; 
             
+        }
+        public bool IsAvailable_DebitDetail_Has_Time(DateTime time)
+        {
+            var list_debit_detail = _db.DebitDetails.ToList();
+            foreach(var item in list_debit_detail)
+            {
+                if(item.TimeRecord == time )
+                {
+                    return false; // không add được vì đã có debit detail ở tháng đang chọn
+                }
+            }
+            return true; // được phép add
         }
         //DateTime timenow = DateTime.Parse(id);
         //var time_now = timenow.ToString("MM-yyyy");
