@@ -89,7 +89,10 @@ namespace QuanLiNhaSach.Areas.Admin.Controllers
                 receipt.ApplicationUser = null;
                 _db.Receipts.Add(receipt);
                 _db.SaveChanges();
-                cus.Dept = cus.Dept - receipt.Proceeds;
+                cus.new_incurred_debit = cus.new_incurred_debit - receipt.Proceeds;
+                cus.new_last_debit = cus.new_first_debit + cus.new_incurred_debit;
+                _db.AppUsers.Update(cus);
+                _db.SaveChanges();
                 return RedirectToAction("Index");
             }
             
@@ -103,10 +106,10 @@ namespace QuanLiNhaSach.Areas.Admin.Controllers
         
         private void check_rule_3(Receipt receipt)
         {
-            var rule = _db.Rules.Find("QD2");
+            var rule = _db.Rules.Find("QD3");
             if (rule.UseThisRule == true)
             {
-                if (receipt.Proceeds > receipt.ApplicationUser.Dept)
+                if (receipt.Proceeds > receipt.ApplicationUser.new_last_debit)
                     throw new Exception("Số tiền thu của khách không được vượt quá số tiền nợ hiện tại của khách hàng");
             }
         }

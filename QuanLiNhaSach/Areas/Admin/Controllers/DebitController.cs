@@ -76,7 +76,7 @@ namespace QuanLiNhaSach.Areas.Admin.Controllers
                     _db.SaveChanges();
                 }
             }
-            return Json(new { success = true ,message = "Tạo báo cáo thành công"}) ; 
+            return Json(new { success = true ,message = ""}) ; 
             
         }
         public bool IsAvailable_DebitDetail_Has_Time(DateTime time)
