@@ -114,7 +114,23 @@ namespace QuanLiNhaSach.Areas.Admin.Controllers
             {
                 ModelState.AddModelError("", e.Message);
                 Add_SelectList_For_ViewBag();
-                return RedirectToAction("Create", new { bill = bill });
+
+                return RedirectToAction("Create",new { bill = bill });
+            }
+            bill.ApplicationUser = null;
+            bill.Staff = null;
+            var newBillDetail = bill.BillDetail.Select(x => new BillDetail { BillId = x.BillId, BookId = x.BookId, Count = x.Count  }).ToList();
+            bill.BillDetail = newBillDetail;
+            // add bill 
+            _db.Bills.Add(bill);
+            if (bill.IsDebit == true) // người dùng chọn nợ thay vì trả tiền mặt
+            {
+                var user = _db.AppUsers.FirstOrDefault(x => x.Id == bill.ApplicationUserId);
+                user.new_incurred_debit += bill.TotalPrice;
+                user.new_last_debit = user.new_first_debit + user.new_incurred_debit; 
+                _db.AppUsers.Update(user);
+                _db.SaveChanges(); // thêm nợ cho khách hàng
+
             }
         }
         [HttpPost]
@@ -222,73 +238,76 @@ namespace QuanLiNhaSach.Areas.Admin.Controllers
             var localDateTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss").Replace(' ', 'T');
             ViewBag.DateCreate = localDateTime;
         }
-        private bool Creat_Or_Update_Debit(Bill bill)
-        {
-            DateTime nearest_date = DateTime.Parse("01-01-0001"); // khởi tạo ngày nợ nhỏ nhất có thể
-            var list_debit_detail = _db.DebitDetails.Where(x => x.ApplicationUserId == bill.ApplicationUserId).ToList(); // tim cac ma no cua thang no nay
-            DebitDetail debit = null; // khoi tao 1 debit rong
-            foreach (var item in list_debit_detail)
-            {
-                var time = item.TimeRecord.ToString("MM-yyyy");
-                // tồn tại tháng nợ trùng hóa đơn
-                if (item.TimeRecord.ToString("MM-yyyy") == bill.DateCreate.ToString("MM-yyyy")) // tìm thằng mã nợ có tháng trùng với tháng của hóa đơn, và người mua hóa đơn là người nợ của mã đó
-                {
-                    item.IncurredDebit += bill.TotalPrice; // cập nhật lại số nợ gia tăng của tháng đó
-                    item.LastDebit = item.FirstDebit + item.IncurredDebit; // cập nhật lại nợ cuối của tháng đó
-                    _db.DebitDetails.Update(item);
-                    _db.SaveChanges();
-                    return true;
-                }
-                else if ((item.TimeRecord - bill.DateCreate).TotalDays < 0 && (item.TimeRecord - nearest_date).TotalDays >= 0)
-                {
-                    nearest_date = DateTime.Parse(item.TimeRecord.ToString("MM-yyyy")); // chuẩn hóa ngày gần nhất , để ngày = 1
-                    debit = item;
-                }
-            }
-            var list_dates_debit = new List<DateTime>(); // list ngay de tao list debit 
-            var datestart = nearest_date.AddMonths(1); // thêm 1 tháng vào ngày gần nhất 
-            var dateend = DateTime.Parse(bill.DateCreate.ToString("MM-yyyy"));
-            for (var dt = datestart; dt < dateend; dt = dt.AddMonths(1)) // tạo ra 1 list tháng sao cho > hơn nearestdate và nhỏ hơn ngày tạo bill
-            {
-                list_dates_debit.Add(DateTime.Parse(dt.ToString("MM-yyyy")));
-            }
-            DebitDetail newdebit = new DebitDetail();
-            newdebit.ApplicationUserId = bill.ApplicationUserId;
-            newdebit.TimeRecord = DateTime.Parse(bill.DateCreate.ToString("MM-yyyy"));
-            //newdebit.TimeRecord = DateTime.Parse(bill.DateCreate.ToString("MM-yyyy")); // lưu time record chỉ có tháng năm , không cần ngày
-            if (debit != null) // nếu tìm được ngày lớn nhất có thể nhưng không trùng với ngày hiện tại, đã từng nợ
-            {
-                // tạo debit của tháng hiện tại( tháng hóa đơn)
-                newdebit.Id = Guid.NewGuid().ToString();
-                newdebit.FirstDebit = debit.LastDebit;
-                newdebit.IncurredDebit = bill.TotalPrice;
-                newdebit.LastDebit = newdebit.FirstDebit + newdebit.IncurredDebit;
-                _db.DebitDetails.Add(newdebit);
-                _db.SaveChanges();
-                foreach (var item in list_dates_debit)  // tạo debit của tháng sau tháng gần nhất và trước tháng hiện tại( tháng tạo hóa đơn)
-                {
-                    newdebit.Id = Guid.NewGuid().ToString();
-                    newdebit.TimeRecord = item;  // lưu time record chỉ có tháng năm , không cần ngày
-                    newdebit.FirstDebit = debit.LastDebit;
-                    newdebit.IncurredDebit = 0;
-                    newdebit.LastDebit = newdebit.FirstDebit + newdebit.IncurredDebit;
-                    _db.DebitDetails.Add(newdebit);
-                    _db.SaveChanges();
-                }
+        //private bool Creat_Or_Update_Debit(Bill bill)
+        //{
+        //    DateTime nearest_date = DateTime.Parse("01-01-0001"); // khởi tạo ngày nợ nhỏ nhất có thể
+        //    var list_debit_detail = _db.DebitDetails.Where(x => x.ApplicationUserId == bill.ApplicationUserId).ToList(); // tim cac ma no cua thang no nay
+        //    //DebitDetail debit = null; // khoi tao 1 debit rong
+        //    foreach (var item in list_debit_detail)
+        //    {
+        //        //var time = item.TimeRecord.ToString("MM-yyyy");
 
-            }
-            else
-            {
-                newdebit.Id = Guid.NewGuid().ToString();
-                newdebit.FirstDebit = 0;
-                newdebit.IncurredDebit = bill.TotalPrice;
-                newdebit.LastDebit = newdebit.FirstDebit + newdebit.IncurredDebit;
-                _db.DebitDetails.Add(newdebit);
-                _db.SaveChanges();
-            }
-            return true;
 
-        }
+        //        // tồn tại tháng nợ trùng hóa đơn
+        //        if (item.TimeRecord.ToString("MM-yyyy") == bill.DateCreate.ToString("MM-yyyy")) // tìm thằng mã nợ có tháng trùng với tháng của hóa đơn, và người mua hóa đơn là người nợ của mã đó
+        //        {
+        //            item.IncurredDebit += bill.TotalPrice; // cập nhật lại số nợ gia tăng của tháng đó
+        //            item.LastDebit = item.FirstDebit + item.IncurredDebit; // cập nhật lại nợ cuối của tháng đó
+        //            _db.DebitDetails.Update(item);
+        //            _db.SaveChanges();
+        //        }
+        //        //else if ((item.TimeRecord - bill.DateCreate).TotalDays < 0 && (item.TimeRecord - nearest_date).TotalDays >= 0)
+        //        //{
+        //        //    nearest_date = DateTime.Parse(item.TimeRecord.ToString("MM-yyyy")); // chuẩn hóa ngày gần nhất , để ngày = 1
+        //        //    debit = item;
+        //        //}
+        //    }
+        //    return true;
+        //    //var list_dates_debit = new List<DateTime>(); // list ngay de tao list debit 
+        //    //var datestart = nearest_date.AddMonths(1); // thêm 1 tháng vào ngày gần nhất 
+        //    //var dateend = DateTime.Parse(bill.DateCreate.ToString("MM-yyyy"));
+        //    //for (var dt = datestart; dt < dateend; dt = dt.AddMonths(1)) // tạo ra 1 list tháng sao cho > hơn nearestdate và nhỏ hơn ngày tạo bill
+        //    //{
+        //    //    list_dates_debit.Add(DateTime.Parse(dt.ToString("MM-yyyy")));
+        //    //}
+        //    //DebitDetail newdebit = new DebitDetail();
+        //    //newdebit.ApplicationUserId = bill.ApplicationUserId;
+        //    //newdebit.TimeRecord = DateTime.Parse(bill.DateCreate.ToString("MM-yyyy"));
+        //    ////newdebit.TimeRecord = DateTime.Parse(bill.DateCreate.ToString("MM-yyyy")); // lưu time record chỉ có tháng năm , không cần ngày
+        //    //if (debit != null) // nếu tìm được ngày lớn nhất có thể nhưng không trùng với ngày hiện tại, đã từng nợ
+        //    //{
+        //    //    // tạo debit của tháng hiện tại( tháng hóa đơn)
+        //    //    newdebit.Id = Guid.NewGuid().ToString();
+        //    //    newdebit.FirstDebit = debit.LastDebit;
+        //    //    newdebit.IncurredDebit = bill.TotalPrice;
+        //    //    newdebit.LastDebit = newdebit.FirstDebit + newdebit.IncurredDebit;
+        //    //    _db.DebitDetails.Add(newdebit);
+        //    //    _db.SaveChanges();
+        //    //    foreach (var item in list_dates_debit)  // tạo debit của tháng sau tháng gần nhất và trước tháng hiện tại( tháng tạo hóa đơn)
+        //    //    {
+        //    //        newdebit.Id = Guid.NewGuid().ToString();
+        //    //        newdebit.TimeRecord = item;  // lưu time record chỉ có tháng năm , không cần ngày
+        //    //        newdebit.FirstDebit = debit.LastDebit;
+        //    //        newdebit.IncurredDebit = 0;
+        //    //        newdebit.LastDebit = newdebit.FirstDebit + newdebit.IncurredDebit;
+        //    //        _db.DebitDetails.Add(newdebit);
+        //    //        _db.SaveChanges();
+        //    //    }
+
+        //    //}
+        //    //else
+        //    //{
+        //    //    newdebit.Id = Guid.NewGuid().ToString();
+        //    //    newdebit.FirstDebit = 0;
+        //    //    newdebit.IncurredDebit = bill.TotalPrice;
+        //    //    newdebit.LastDebit = newdebit.FirstDebit + newdebit.IncurredDebit;
+        //    //    _db.DebitDetails.Add(newdebit);
+        //    //    _db.SaveChanges();
+        //    //}
+        //    //return true;
+        //}
+        
+
         //public float Find_First_Debit_Of_User(Bill bill)
         //{
         //    var list_debit_detail = _db.DebitDetails.ToList();
@@ -317,11 +336,13 @@ namespace QuanLiNhaSach.Areas.Admin.Controllers
                         throw new Exception("Cuốn sách có tên \" " + item.Book.Name + " \" vi phạm quy định số hai" + ",số lượng tồn kho của sách sau khi bán phải từ " + rule.Max + " quyển trở lên (Chỉ có thể mua tối đa " + (_db.Books.Find(item.BookId).Quantity - rule.Max) + " quyển)");
                     }
                 }
-                if (bill.ApplicationUser.Dept > rule.Min) // nếu nợ của khách lớn hơn quy định cho phép
+                if (bill.ApplicationUser.new_last_debit > rule.Min) // nếu nợ của khách lớn hơn quy định cho phép
                     throw new Exception("Chỉ bán cho khách hàng có nợ không  quá" + rule.Min + "đồng");
-                else if (bill.IsDebit == true && (bill.ApplicationUser.Dept + bill.TotalPrice > rule.Min)) // nếu nợ của khách nhỏ hơn quy định cho phép nhưng khách lại muốn tiếp tục nợ mà tiền sách nợ + với nợ cũ lớn hơn quy định cho phép thì cũng không bán
-                    throw new Exception("Khách hàng hiện đang nợ " + bill.ApplicationUser.Dept + " đồng. Nếu tiếp tục mua nợ thì nợ của khách hàng sẽ là " + (bill.ApplicationUser.Dept + bill.TotalPrice) + " đồng.Vi phạm quy định 2. Để tiếp tục giao dịch, Vui lòng thanh toán nợ cho thủ thư,hoặc chọn phương thức mua không nợ");
-            }
+
+                else if (bill.IsDebit == true && (bill.ApplicationUser.new_last_debit + bill.TotalPrice > rule.Min)) // nếu nợ của khách nhỏ hơn quy định cho phép nhưng khách lại muốn tiếp tục nợ mà tiền sách nợ + với nợ cũ lớn hơn quy định cho phép thì cũng không bán
+                    throw new Exception("Khách hàng hiện đang nợ " + bill.ApplicationUser.new_last_debit + " đồng. Nếu tiếp tục mua nợ thì nợ của khách hàng sẽ là " + (bill.ApplicationUser.new_last_debit + bill.TotalPrice) + " đồng.Vi phạm quy định 2. Để tiếp tục giao dịch, Vui lòng thanh toán nợ cho thủ thư,hoặc chọn phương thức mua không nợ");
+             }
+
             else // nếu không sử dụng rule 2
             {
                 // kiểm tra xem số lượng đặt mua có lớn hơn só lượng tồn của kho sách không
