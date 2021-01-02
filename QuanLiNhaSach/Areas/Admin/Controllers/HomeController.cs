@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using QuanLiNhaSach.Data;
 using System;
 using System.Linq;
@@ -57,7 +58,22 @@ namespace QuanLiNhaSach.Areas.Admin.Controllers
         }
 
 
+        public IActionResult Statistical_Book()
+        {
+            var obj = _db.BillDetails.Include(x => x.Book)
+                .GroupBy(x => x.Book.Name)
+                .Select(x => new
+                {
+                    book = x.Key,
+                    count = x.Sum(x => x.Count)
 
+                }).OrderByDescending(x=>x.count).ToList();
+            var labels = obj.Select(x => x.book).ToArray();
+            var values = obj.Select(x => x.count).ToArray();
+
+            return Json(new { labels, values });
+            
+        }
 
     }
 
