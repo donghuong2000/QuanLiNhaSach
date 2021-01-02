@@ -12,6 +12,8 @@ namespace QuanLiNhaSach.Models
         public int IncurredExist { get; set; }
         public int LastExist { get; set; }
 
+
         public virtual Book Book { get; set; }
     } 
+
 }
