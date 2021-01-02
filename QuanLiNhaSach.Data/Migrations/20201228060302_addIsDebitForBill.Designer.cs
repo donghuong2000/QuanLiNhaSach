@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using QuanLiNhaSach.Data;
 
 namespace QuanLiNhaSach.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201228060302_addIsDebitForBill")]
+    partial class addIsDebitForBill
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -361,7 +363,7 @@ namespace QuanLiNhaSach.Data.Migrations
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("BookId")
+                    b.Property<string>("BookExistHeaderId")
                         .HasColumnType("nvarchar(450)")
                         .HasMaxLength(450);
 
@@ -379,9 +381,28 @@ namespace QuanLiNhaSach.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("BookId");
+                    b.HasIndex("BookExistHeaderId");
 
                     b.ToTable("BookExistDetails");
+                });
+
+            modelBuilder.Entity("QuanLiNhaSach.Models.BookExistHeader", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("BookId")
+                        .HasColumnType("nvarchar(450)")
+                        .HasMaxLength(450);
+
+                    b.Property<int>("TotalExist")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BookId");
+
+                    b.ToTable("BookExistHeaders");
                 });
 
             modelBuilder.Entity("QuanLiNhaSach.Models.Category", b =>
@@ -606,10 +627,18 @@ namespace QuanLiNhaSach.Data.Migrations
 
             modelBuilder.Entity("QuanLiNhaSach.Models.BookExistDetail", b =>
                 {
-                    b.HasOne("QuanLiNhaSach.Models.Book", "Book")
+                    b.HasOne("QuanLiNhaSach.Models.BookExistHeader", "BookExistHeader")
                         .WithMany("BookExistDetail")
+                        .HasForeignKey("BookExistHeaderId")
+                        .HasConstraintName("FK_BookExistDetail_BookExistHeader");
+                });
+
+            modelBuilder.Entity("QuanLiNhaSach.Models.BookExistHeader", b =>
+                {
+                    b.HasOne("QuanLiNhaSach.Models.Book", "Book")
+                        .WithMany("BookExistHeader")
                         .HasForeignKey("BookId")
-                        .HasConstraintName("FK_BookExistDetail_Book");
+                        .HasConstraintName("FK_BookExistHeader_Book");
                 });
 
             modelBuilder.Entity("QuanLiNhaSach.Models.DebitDetail", b =>

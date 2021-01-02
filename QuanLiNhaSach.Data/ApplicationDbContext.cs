@@ -26,8 +26,6 @@ namespace QuanLiNhaSach.Data
         public DbSet<BookEntryTicket> BookEntryTickets { get; set; }
         public DbSet<BookEntryTicketDetail> BookEntryTicketDetails { get; set; }
         public DbSet<BookExistDetail> BookExistDetails { get; set; }
-        public DbSet<BookExistHeader> BookExistHeaders { get; set; }
-
         public DbSet<DebitDetail> DebitDetails { get; set; }
         
         public DbSet<Receipt> Receipts { get; set; }
@@ -135,26 +133,15 @@ namespace QuanLiNhaSach.Data
 
             modelBuilder.Entity<BookExistDetail>(entity =>
             {
-                entity.Property(e => e.BookExistHeaderId).HasMaxLength(450);
+                entity.Property(e => e.BookId).HasMaxLength(450);
 
                 entity.Property(e => e.TimeRecord).HasColumnType("datetime");
 
-                entity.HasOne(d => d.BookExistHeader)
-                    .WithMany(p => p.BookExistDetail)
-                    .HasForeignKey(d => d.BookExistHeaderId)
-                    .HasConstraintName("FK_BookExistDetail_BookExistHeader");
-            });
-
-            modelBuilder.Entity<BookExistHeader>(entity =>
-            {
-                entity.Property(e => e.BookId).HasMaxLength(450);
-
                 entity.HasOne(d => d.Book)
-                    .WithMany(p => p.BookExistHeader)
+                    .WithMany(p => p.BookExistDetail)
                     .HasForeignKey(d => d.BookId)
-                    .HasConstraintName("FK_BookExistHeader_Book");
+                    .HasConstraintName("FK_BookExistDetail_Book");
             });
-
             modelBuilder.Entity<Category>(entity =>
             {
                 entity.Property(e => e.Name).HasMaxLength(200);

@@ -1,47 +1,30 @@
-﻿@model QuanLiNhaSach.Models.Bill
+﻿@model QuanLiNhaSach.Models.BookEntryTicket
 
 @{
-    ViewData["Title"] = " hóa đơn demo";
+    ViewData["Title"] = "Xác nhận phiếu nhập sách";
 }
 <div class="container">
     <div class="row">
         <div class="col-md-12">
             <div class="invoice-title">
-                <h2>HÓA ĐƠN</h2><h3 class="pull-right"> # @Model.Id</h3>
+                <h2>PHIẾU NHẬP SÁCH</h2><h3 class="pull-right"> # @Model.Id</h3>
             </div>
             <hr>
             <div class="row">
-                <div class="col-md-6">
+                @*<div class="col-md-6">
                     <address>
                         <strong>thông tin người lập hóa đơn:</strong><br>
                         @Model.Staff.FullName<br>
                         @Model.Staff.Email<br>
 
                     </address>
-                </div>
-                <div class="col-md-6 text-right">
-                    <address>
-                        <strong>Thông tin khách hàng:</strong><br>
-                        @Model.ApplicationUser.FullName<br>
-                        @Model.ApplicationUser.Email<br>
-                        @Model.ApplicationUser.PhoneNumber<br>
-                        @Model.ApplicationUser.Address<br>
-
-                    </address>
-                </div>
+                </div>*@
             </div>
             <div class="row">
-                <div class="col-md-6">
-                    <address>
-                        <strong>Phương thức thanh toán:</strong><br>
-                        Tiền mặt<br>
-
-                    </address>
-                </div>
                 <div class="col-md-6 text-right">
                     <address>
-                        <strong>Ngày lập hóa đơn</strong><br>
-                        @Model.DateCreate<br><br>
+                        <strong>Ngày nhập sách</strong><br>
+                        @Model.DateEntry<br><br>
                     </address>
                 </div>
             </div>
@@ -52,7 +35,7 @@
         <div class="col-md-12">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <h3 class="panel-title"><strong>Chi tiết hóa đơn</strong></h3>
+                    <h3 class="panel-title"><strong>Chi tiết phiếu nhập sách</strong></h3>
                 </div>
                 <div class="panel-body">
                     <div class="table-responsive">
@@ -60,14 +43,14 @@
                             <thead>
                                 <tr>
                                     <td><strong>Sách</strong></td>
-                                    <td class="text-center"><strong>Giá tiền</strong></td>
-                                    <td class="text-center"><strong>Số lượng</strong></td>
-                                    <td class="text-right"><strong>Tổng cộng</strong></td>
+                                    <td class="text-center"><strong>Thể loại</strong></td>
+                                    <td class="text-center"><strong>Tác giả</strong></td>
+                                    <td class="text-right"><strong>Số lượng</strong></td>
                                 </tr>
                             </thead>
                             <tbody>
                                 <!-- foreach ($order->lineItems as $line) or some such thing here -->
-                                @foreach (var item in Model.BillDetail)
+                                @foreach (var item in Model.BookEntryTicketDetail)
                                 {
                                     <tr>
                                         <td>
@@ -77,45 +60,25 @@
                                                     <span> @item.Book.Name</span>
                                                 </a>
                                             </div>
-
                                         </td>
                                         <td>
-                                            <div style="margin-top:50%" class="text-center">
-                                                @item.Book.Price
+                                            <div style="margin-top:16%" class="text-center">
+                                                @item.Book.Category.Name
                                             </div>
                                         </td>
                                         <td>
                                             <div style="margin-top:21%" class="text-center">
-                                                @item.Count
+                                                @item.Book.Author
                                             </div>
                                         </td>
                                         <td>
                                             <div style="margin-top:21%" class="text-right">
-                                                @(item.Book.Price*item.Count)
+                                                @item.Count
                                             </div>
                                         </td>
                                     </tr>
                                 }
-                                <tr>
-                                    <td class="thick-line"></td>
-                                    <td class="thick-line"></td>
-                                    <td class="thick-line text-center"><h2><strong>Tổng tiền</strong></h2></td>
-                                    <td class="thick-line text-right"><h2><strong>@Model.TotalPrice</strong></h2></td>
-                                </tr>
-                                <tr>
-                                    <td class="no-line"></td>
-                                    <td class="no-line"></td>
-                                    <td class="no-line"></td>
-                                    @if (Model.IsDebit == true)
-                                    {
-                                        <td class="text-right"><h2><strong>Khách Nợ</strong></h2></td>
-                                    }
-                                    else
-                                    {
-                                        <td class="text-right"><h2><strong>Khách trả tiền </strong></h2></td>
-                                    }
-                                </tr>
-
+                                
                             </tbody>
                         </table>
                     </div>
@@ -124,8 +87,8 @@
         </div>
     </div>
     <div class="row">
-        <a asp-action="BillDemoCancel" class="btn btn-danger col-6">Hủy thanh toán</a>
-        <a asp-action="BillDemoConfirm" class="btn btn-primary col-6">Xác nhận thanh toán</a>
+        <a asp-action="TicketDemoCancel" class="btn btn-danger col-6">Hủy phiếu nhập sách</a>
+        <a asp-action="TicketDemoConfirm" class="btn btn-primary col-6">Xác nhận phiếu nhập sách</a>
     </div>
 </div>
 
