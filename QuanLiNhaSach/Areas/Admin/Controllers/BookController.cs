@@ -45,6 +45,7 @@ namespace QuanLiNhaSach.Areas.Admin.Controllers
             }).ToList();
             return Json(new { data = obj });
         }
+        [Authorize(Roles = "Admin")]
         public IActionResult Upsert(string id)
         {
             // cho selectlist của view
@@ -72,6 +73,7 @@ namespace QuanLiNhaSach.Areas.Admin.Controllers
 
         }
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public IActionResult Upsert(BookViewModel vm)
         {
             // cho selectlist của view
@@ -133,6 +135,7 @@ namespace QuanLiNhaSach.Areas.Admin.Controllers
             return View(vm);
         }
         [HttpDelete]
+        [Authorize(Roles = "Admin")]
         public IActionResult Delete(string id)
         {
             try
