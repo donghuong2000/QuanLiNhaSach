@@ -13,6 +13,12 @@ namespace QuanLiNhaSach.Models
             BillDetail = new HashSet<BillDetail>();
             BookEntryTicketDetail = new HashSet<BookEntryTicketDetail>();
             BookExistDetail = new HashSet<BookExistDetail>();
+            Quantity = 0;
+            new_first_exist = 0;
+            new_incurred_exist = 0;
+            old_first_exist = 0;
+            old_incurred_exist = 0;
+            old_Quantity = 0;
         }
 
         public string Id { get; set; }
@@ -23,9 +29,14 @@ namespace QuanLiNhaSach.Models
         public DateTime DatePublish { get; set; }
         public string Decription { get; set; }
         public float Price { get; set; }
+        // new
         public int Quantity { get; set; }
         public int new_first_exist { get; set; }
         public int new_incurred_exist { get; set; }
+        // old 
+        public int old_first_exist { get; set; }
+        public int old_incurred_exist { get; set; }
+        public int old_Quantity { get; set; }
         public virtual Category Category { get; set; }
         public virtual ICollection<BillDetail> BillDetail { get; set; }
         public virtual ICollection<BookEntryTicketDetail> BookEntryTicketDetail { get; set; }

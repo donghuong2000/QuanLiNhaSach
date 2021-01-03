@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using QuanLiNhaSach.Data;
 
 namespace QuanLiNhaSach.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210103053507_debit-modify-old")]
+    partial class debitmodifyold
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -307,15 +309,6 @@ namespace QuanLiNhaSach.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<int>("new_incurred_exist")
-                        .HasColumnType("int");
-
-                    b.Property<int>("old_Quantity")
-                        .HasColumnType("int");
-
-                    b.Property<int>("old_first_exist")
-                        .HasColumnType("int");
-
-                    b.Property<int>("old_incurred_exist")
                         .HasColumnType("int");
 
                     b.HasKey("Id");

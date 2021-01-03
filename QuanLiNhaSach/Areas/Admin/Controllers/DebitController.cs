@@ -48,6 +48,8 @@ namespace QuanLiNhaSach.Areas.Admin.Controllers
         }
         public IActionResult Create_List_Debit(string id) // hàm sẽ tạo debit detail từ new first debit, new incurred debit , new last debit của user
         {
+            if (id == null)
+                return Json(new { success = false, message = "Vui lòng chọn tháng cần báo cáo trước khi tạo báo cáo !" }); 
             var timenow = DateTime.Parse(id); // biến string nhập vào là 1 ngày
             var result = IsAvailable_DebitDetail_Has_Time(timenow);
             if (result == false)
