@@ -1,4 +1,6 @@
-﻿
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<AppUser> SignInManager
+@inject UserManager<AppUser> UserManager
 <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
     <!-- Sidebar - Brand -->
@@ -23,163 +25,263 @@
     <!-- Divider -->
     <hr class="sidebar-divider">
 
-
-
-    <!-- Nav Item - Người dùng Collapse Menu -->
-    <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseND"
-           aria-expanded="true" aria-controls="collapseND">
-            <i class="fas fa-users"></i>
-            <span>Quản lí người dùng</span>
-        </a>
-        <div id="collapseND" class="collapse" aria-labelledby="headingND" data-parent="#accordionSidebar">
-            <div class="bg-white py-2 collapse-inner rounded">
-                <h6 class="collapse-header">Chức năng:</h6>
-                <a class="collapse-item" asp-action="Index" asp-controller="User">Danh sách người dùng</a>
-                <a class="collapse-item" href="/Admin/user/upsert">Tạo người dùng</a>
+    @if (User.IsInRole("Admin"))
+    {
+        <!-- Nav Item - Người dùng Collapse Menu -->
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseND"
+               aria-expanded="true" aria-controls="collapseND">
+                <i class="fas fa-users"></i>
+                <span>Quản lí người dùng</span>
+            </a>
+            <div id="collapseND" class="collapse" aria-labelledby="headingND" data-parent="#accordionSidebar">
+                <div class="bg-white py-2 collapse-inner rounded">
+                    <h6 class="collapse-header">Chức năng:</h6>
+                    <a class="collapse-item" asp-action="Index" asp-controller="User">Danh sách người dùng</a>
+                    <a class="collapse-item" href="/Admin/user/upsert">Tạo người dùng</a>
+                </div>
             </div>
-        </div>
-    </li>
+        </li>
 
-    <!-- Nav Item - Utilities Collapse Menu -->
-    <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapserole"
-           aria-expanded="true" aria-controls="collapserole">
-            <i class="fas fa-user-tag"></i>
-            <span>Quản lí chức vụ</span>
-        </a>
-        <div id="collapserole" class="collapse" aria-labelledby="headingrole"
-             data-parent="#accordionSidebar">
-            <div class="bg-white py-2 collapse-inner rounded">
-                <h6 class="collapse-header">Chức năng:</h6>
-                <a class="collapse-item" asp-action="Index" asp-controller="role">Danh sách role</a>
-                <a class="collapse-item" href="/Admin/role/upsert">Tạo role</a>
+        <!-- Nav Item - Utilities Collapse Menu -->
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapserole"
+               aria-expanded="true" aria-controls="collapserole">
+                <i class="fas fa-user-tag"></i>
+                <span>Quản lí chức vụ</span>
+            </a>
+            <div id="collapserole" class="collapse" aria-labelledby="headingrole"
+                 data-parent="#accordionSidebar">
+                <div class="bg-white py-2 collapse-inner rounded">
+                    <h6 class="collapse-header">Chức năng:</h6>
+                    <a class="collapse-item" asp-action="Index" asp-controller="role">Danh sách role</a>
+                    <a class="collapse-item" href="/Admin/role/upsert">Tạo role</a>
 
+                </div>
             </div>
-        </div>
-    </li>
+        </li>
 
 
-    <!-- Divider -->
-    <hr class="sidebar-divider">
+        <!-- Nav Item - Pages Collapse Menu -->
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsedanhmuc"
+               aria-expanded="true" aria-controls="collapsedanhmuc">
+                <i class="fas fa-tags"></i>
+                <span>Quản lí danh mục</span>
+            </a>
+            <div id="collapsedanhmuc" class="collapse" aria-labelledby="headingdanhmuc"
+                 data-parent="#accordionSidebar">
+                <div class="bg-white py-2 collapse-inner rounded">
+                    <h6 class="collapse-header">Chức năng:</h6>
+                    <a class="collapse-item" asp-action="Index" asp-controller="category">Danh sách danh mục</a>
+                    <a class="collapse-item" href="/Admin/category/upsert">Tạo danh mục</a>
 
-
-    <!-- Nav Item - Pages Collapse Menu -->
-    <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsedanhmuc"
-           aria-expanded="true" aria-controls="collapsedanhmuc">
-            <i class="fas fa-tags"></i>
-            <span>Quản lí danh mục</span>
-        </a>
-        <div id="collapsedanhmuc" class="collapse" aria-labelledby="headingdanhmuc"
-             data-parent="#accordionSidebar">
-            <div class="bg-white py-2 collapse-inner rounded">
-                <h6 class="collapse-header">Chức năng:</h6>
-                <a class="collapse-item" asp-action="Index" asp-controller="category">Danh sách danh mục</a>
-                <a class="collapse-item" href="/Admin/category/upsert">Tạo danh mục</a>
-
+                </div>
             </div>
-        </div>
-    </li>
-    <!-- Nav Item - Sách Collapse Menu -->
-    <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsesach"
-           aria-expanded="true" aria-controls="collapsesach">
-            <i class="fas fa-book"></i>
-            <span>Quản lí Sách</span>
-        </a>
-        <div id="collapsesach" class="collapse" aria-labelledby="headingsach"
-             data-parent="#accordionSidebar">
-            <div class="bg-white py-2 collapse-inner rounded">
-                <h6 class="collapse-header">Chức năng:</h6>
-                <a class="collapse-item" asp-action="Index" asp-controller="book">Danh sách Sách</a>
-                <a class="collapse-item" href="/Admin/book/upsert">Tạo Sách</a>
-                <a class="collapse-item" asp-action="Index" asp-controller="bookexist">Báo cáo tồn kho</a>
+        </li>
+        <!-- Nav Item - Sách Collapse Menu -->
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsesach"
+               aria-expanded="true" aria-controls="collapsesach">
+                <i class="fas fa-book"></i>
+                <span>Quản lí Sách</span>
+            </a>
+            <div id="collapsesach" class="collapse" aria-labelledby="headingsach"
+                 data-parent="#accordionSidebar">
+                <div class="bg-white py-2 collapse-inner rounded">
+                    <h6 class="collapse-header">Chức năng:</h6>
+                    <a class="collapse-item" asp-action="Index" asp-controller="book">Danh sách Sách</a>
+                    <a class="collapse-item" href="/Admin/book/upsert">Tạo Sách</a>
+                    <a class="collapse-item" asp-action="Index" asp-controller="bookexist">Báo cáo tồn kho</a>
 
+                </div>
             </div>
-        </div>
-    </li>
-    <!-- Nav Item - nhập Sách Collapse Menu -->
-    <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsenhapsach"
-           aria-expanded="true" aria-controls="collapsenhapsach">
-            <i class="fas fa-file-import"></i>
-            <span>Quản lí nhập sách</span>
-        </a>
-        <div id="collapsenhapsach" class="collapse" aria-labelledby="headingsach"
-             data-parent="#accordionSidebar">
-            <div class="bg-white py-2 collapse-inner rounded">
-                <h6 class="collapse-header">Chức năng:</h6>
-                <a class="collapse-item" asp-action="Index" asp-controller="bookentryticket">Danh sách phiếu nhập sách</a>
-                <a class="collapse-item" href="/Admin/bookentryticket/Create">Tạo phiếu nhập Sách</a>
+        </li>
+        <!-- Nav Item - nhập Sách Collapse Menu -->
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsenhapsach"
+               aria-expanded="true" aria-controls="collapsenhapsach">
+                <i class="fas fa-file-import"></i>
+                <span>Quản lí nhập sách</span>
+            </a>
+            <div id="collapsenhapsach" class="collapse" aria-labelledby="headingsach"
+                 data-parent="#accordionSidebar">
+                <div class="bg-white py-2 collapse-inner rounded">
+                    <h6 class="collapse-header">Chức năng:</h6>
+                    <a class="collapse-item" asp-action="Index" asp-controller="bookentryticket">Danh sách phiếu nhập sách</a>
+                    <a class="collapse-item" href="/Admin/bookentryticket/Create">Tạo phiếu nhập Sách</a>
+                </div>
             </div>
-        </div>
-    </li>
-    <!-- Nav Item -Bill Collapse Menu -->
-    <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsebill"
-           aria-expanded="true" aria-controls="collapsesach">
-            <i class="fas fa-file-invoice-dollar"></i>
-            <span>Quản lí Hóa đơn</span>
-        </a>
-        <div id="collapsebill" class="collapse" aria-labelledby="headingsach"
-             data-parent="#accordionSidebar">
-            <div class="bg-white py-2 collapse-inner rounded">
-                <h6 class="collapse-header">Chức năng:</h6>
-                <a class="collapse-item" asp-action="Index" asp-controller="bill">Danh sách hóa đơn</a>
-                <a class="collapse-item" href="/Admin/bill/Create">Tạo Hóa đơn</a>
+        </li>
+        <!-- Nav Item -Bill Collapse Menu -->
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsebill"
+               aria-expanded="true" aria-controls="collapsesach">
+                <i class="fas fa-file-invoice-dollar"></i>
+                <span>Quản lí Hóa đơn</span>
+            </a>
+            <div id="collapsebill" class="collapse" aria-labelledby="headingsach"
+                 data-parent="#accordionSidebar">
+                <div class="bg-white py-2 collapse-inner rounded">
+                    <h6 class="collapse-header">Chức năng:</h6>
+                    <a class="collapse-item" asp-action="Index" asp-controller="bill">Danh sách hóa đơn</a>
+                    <a class="collapse-item" href="/Admin/bill/Create">Tạo Hóa đơn</a>
 
+                </div>
             </div>
-        </div>
-    </li>
-    <!-- Nav Item -Quy định Collapse Menu -->
-    <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseRule"
-           aria-expanded="true" aria-controls="collapsesach">
-            <i class="fas fa-file-invoice-dollar"></i>
-            <span>Quản lí quy định</span>
-        </a>
-        <div id="collapseRule" class="collapse" aria-labelledby="headingsach"
-             data-parent="#accordionSidebar">
-            <div class="bg-white py-2 collapse-inner rounded">
-                <h6 class="collapse-header">Chức năng:</h6>
-                <a class="collapse-item" asp-action="Index" asp-controller="rule">Danh sách quy định</a>
+        </li>
+        <!-- Nav Item -Quy định Collapse Menu -->
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseRule"
+               aria-expanded="true" aria-controls="collapsesach">
+                <i class="fas fa-file-invoice-dollar"></i>
+                <span>Quản lí quy định</span>
+            </a>
+            <div id="collapseRule" class="collapse" aria-labelledby="headingsach"
+                 data-parent="#accordionSidebar">
+                <div class="bg-white py-2 collapse-inner rounded">
+                    <h6 class="collapse-header">Chức năng:</h6>
+                    <a class="collapse-item" asp-action="Index" asp-controller="rule">Danh sách quy định</a>
 
 
+                </div>
             </div>
-        </div>
-    </li>
-    <!-- Nav Item - Nợ Collapse Menu -->
-    <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseDebit"
-           aria-expanded="true" aria-controls="collapseDebit">
-            <i class="fas fa-search-dollar"></i>
-            <span>Quản lí Nợ</span>
-        </a>
-        <div id="collapseDebit" class="collapse" aria-labelledby="headingDebit" data-parent="#accordionSidebar">
-            <div class="bg-white py-2 collapse-inner rounded">
-                <h6 class="collapse-header">Chức năng:</h6>
-                <a class="collapse-item" asp-action="Index" asp-controller="Debit">Danh sách Nợ</a>
-                @*<a class="collapse-item" href="/Admin/user/upsert">Tạo người dùng</a>*@
+        </li>
+        <!-- Nav Item - Nợ Collapse Menu -->
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseDebit"
+               aria-expanded="true" aria-controls="collapseDebit">
+                <i class="fas fa-search-dollar"></i>
+                <span>Quản lí Nợ</span>
+            </a>
+            <div id="collapseDebit" class="collapse" aria-labelledby="headingDebit" data-parent="#accordionSidebar">
+                <div class="bg-white py-2 collapse-inner rounded">
+                    <h6 class="collapse-header">Chức năng:</h6>
+                    <a class="collapse-item" asp-action="Index" asp-controller="Debit">Danh sách Nợ</a>
+                    @*<a class="collapse-item" href="/Admin/user/upsert">Tạo người dùng</a>*@
+                </div>
             </div>
-        </div>
-    </li>
+        </li>
 
-    <!-- Nav Item - Phiếu thu tiền Collapse Menu -->
-    <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseReceipt"
-           aria-expanded="true" aria-controls="collapseReceipt">
-            <i class="fas fa-file-invoice-dollar"></i>
-            <span>Quản lí Phiếu Thu Tiền</span>
-        </a>
-        <div id="collapseReceipt" class="collapse" aria-labelledby="headingReceipt" data-parent="#accordionSidebar">
-            <div class="bg-white py-2 collapse-inner rounded">
-                <h6 class="collapse-header">Chức năng:</h6>
-                <a class="collapse-item" asp-action="Index" asp-controller="Receipt">Danh sách Phiếu thu tiền</a>
-                <a class="collapse-item" href="/Admin/Receipt/Create">Tạo phiếu thu tiền</a>
+        <!-- Nav Item - Phiếu thu tiền Collapse Menu -->
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseReceipt"
+               aria-expanded="true" aria-controls="collapseReceipt">
+                <i class="fas fa-file-invoice-dollar"></i>
+                <span>Quản lí Phiếu Thu Tiền</span>
+            </a>
+            <div id="collapseReceipt" class="collapse" aria-labelledby="headingReceipt" data-parent="#accordionSidebar">
+                <div class="bg-white py-2 collapse-inner rounded">
+                    <h6 class="collapse-header">Chức năng:</h6>
+                    <a class="collapse-item" asp-action="Index" asp-controller="Receipt">Danh sách Phiếu thu tiền</a>
+                    <a class="collapse-item" href="/Admin/Receipt/Create">Tạo phiếu thu tiền</a>
+                </div>
             </div>
-        </div>
-    </li>
+        </li>
+    }
+    else if (User.IsInRole("Manager"))
+    {
+
+
+        <!-- Nav Item - Người dùng Collapse Menu -->
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseND"
+               aria-expanded="true" aria-controls="collapseND">
+                <i class="fas fa-users"></i>
+                <span>Quản lí người dùng</span>
+            </a>
+            <div id="collapseND" class="collapse" aria-labelledby="headingND" data-parent="#accordionSidebar">
+                <div class="bg-white py-2 collapse-inner rounded">
+                    <h6 class="collapse-header">Chức năng:</h6>
+                    <a class="collapse-item" asp-action="Index" asp-controller="User">Danh sách người dùng</a>
+                    <a class="collapse-item" href="/Admin/user/upsert">Tạo người dùng</a>
+                </div>
+            </div>
+        </li>
+        <!-- Nav Item - Sách Collapse Menu -->
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsesach"
+               aria-expanded="true" aria-controls="collapsesach">
+                <i class="fas fa-book"></i>
+                <span>Quản lí Sách</span>
+            </a>
+            <div id="collapsesach" class="collapse" aria-labelledby="headingsach"
+                 data-parent="#accordionSidebar">
+                <div class="bg-white py-2 collapse-inner rounded">
+                    <h6 class="collapse-header">Chức năng:</h6>
+                    <a class="collapse-item" asp-action="Index" asp-controller="book">Danh sách Sách</a>
+                    <a class="collapse-item" href="/Admin/book/upsert">Tạo Sách</a>
+                    <a class="collapse-item" asp-action="Index" asp-controller="bookexist">Báo cáo tồn kho</a>
+
+                </div>
+            </div>
+        </li>
+        <!-- Nav Item -Bill Collapse Menu -->
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsebill"
+               aria-expanded="true" aria-controls="collapsesach">
+                <i class="fas fa-file-invoice-dollar"></i>
+                <span>Quản lí Hóa đơn</span>
+            </a>
+            <div id="collapsebill" class="collapse" aria-labelledby="headingsach"
+                 data-parent="#accordionSidebar">
+                <div class="bg-white py-2 collapse-inner rounded">
+                    <h6 class="collapse-header">Chức năng:</h6>
+                    <a class="collapse-item" asp-action="Index" asp-controller="bill">Danh sách hóa đơn</a>
+                    <a class="collapse-item" href="/Admin/bill/Create">Tạo Hóa đơn</a>
+
+                </div>
+            </div>
+        </li>
+        <!-- Nav Item -Quy định Collapse Menu -->
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseRule"
+               aria-expanded="true" aria-controls="collapsesach">
+                <i class="fas fa-file-invoice-dollar"></i>
+                <span>Quản lí quy định</span>
+            </a>
+            <div id="collapseRule" class="collapse" aria-labelledby="headingsach"
+                 data-parent="#accordionSidebar">
+                <div class="bg-white py-2 collapse-inner rounded">
+                    <h6 class="collapse-header">Chức năng:</h6>
+                    <a class="collapse-item" asp-action="Index" asp-controller="rule">Danh sách quy định</a>
+                </div>
+            </div>
+        </li>
+        <!-- Nav Item - Nợ Collapse Menu -->
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseDebit"
+               aria-expanded="true" aria-controls="collapseDebit">
+                <i class="fas fa-search-dollar"></i>
+                <span>Quản lí Nợ</span>
+            </a>
+            <div id="collapseDebit" class="collapse" aria-labelledby="headingDebit" data-parent="#accordionSidebar">
+                <div class="bg-white py-2 collapse-inner rounded">
+                    <h6 class="collapse-header">Chức năng:</h6>
+                    <a class="collapse-item" asp-action="Index" asp-controller="Debit">Danh sách Nợ</a>
+                    @*<a class="collapse-item" href="/Admin/user/upsert">Tạo người dùng</a>*@
+                </div>
+            </div>
+        </li>
+
+        <!-- Nav Item - Phiếu thu tiền Collapse Menu -->
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseReceipt"
+               aria-expanded="true" aria-controls="collapseReceipt">
+                <i class="fas fa-file-invoice-dollar"></i>
+                <span>Quản lí Phiếu Thu Tiền</span>
+            </a>
+            <div id="collapseReceipt" class="collapse" aria-labelledby="headingReceipt" data-parent="#accordionSidebar">
+                <div class="bg-white py-2 collapse-inner rounded">
+                    <h6 class="collapse-header">Chức năng:</h6>
+                    <a class="collapse-item" asp-action="Index" asp-controller="Receipt">Danh sách Phiếu thu tiền</a>
+                    <a class="collapse-item" href="/Admin/Receipt/Create">Tạo phiếu thu tiền</a>
+                </div>
+            </div>
+        </li>
+    }
+
+
 
 
 

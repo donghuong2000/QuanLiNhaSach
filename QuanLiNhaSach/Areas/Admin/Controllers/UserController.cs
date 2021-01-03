@@ -13,7 +13,7 @@ using QuanLiNhaSach.Models.ViewModels;
 namespace QuanLiNhaSach.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     public class UserController : Controller
     {
         private readonly ApplicationDbContext _db;
@@ -138,16 +138,20 @@ namespace QuanLiNhaSach.Areas.Admin.Controllers
         
         public IActionResult GetAll()
         {
-            var obj = _db.AppUsers.Select(x => new
-            {
-                id = x.Id,
-                username = x.UserName,
-                name = x.FullName,
-                email = x.Email,
-                role = _usermanager.GetRolesAsync(x).Result,
-                islock = isLock(x.LockoutEnd.GetValueOrDefault())
-            }).ToList();
+           
+                var obj = _db.AppUsers.Select(x => new
+                {
+                    id = x.Id,
+                    username = x.UserName,
+                    name = x.FullName,
+                    email = x.Email,
+                    role = _usermanager.GetRolesAsync(x).Result,
+                    islock = isLock(x.LockoutEnd.GetValueOrDefault()),
+                }).ToList();
+              
             return Json(new { data = obj });
+           
+               
         }
         public IActionResult LockUnLock(string id)
         {

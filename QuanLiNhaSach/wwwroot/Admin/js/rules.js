@@ -17,9 +17,7 @@ $('#updateqd-1').click(function () {
         return false
     }
         
-    console.log(useThisRule);
-    console.log(nin);
-    console.log(tin);
+   
     $.ajax({
         url:'/Admin/rule/update',
         method: 'post',
@@ -30,6 +28,9 @@ $('#updateqd-1').click(function () {
             else
                 toastr.error(data.message)
         }
+    }).catch(function (data) {
+    console.log(data)
+        toastr.error(data.statusText + ' ' + data.status)
     })
 })
 $('#updateqd-2').click(function () {
@@ -43,9 +44,8 @@ $('#updateqd-2').click(function () {
         toastr.error("Giá trị nhập vào phải lớn hơn 0")
         return false
     }
-    console.log(useThisRule);
-    console.log(nin);
-    console.log(tin);
+   
+   
     $.ajax({
         url: '/Admin/rule/update',
         method: 'post',
@@ -56,6 +56,8 @@ $('#updateqd-2').click(function () {
             else
                 toastr.error(data.message)
         }
+    }).catch(function (data) {
+        toastr.error(data.statusText + ' ' + data.status)
     })
 })
 $('#updateqd-3').click(function () {
@@ -74,5 +76,7 @@ $('#updateqd-3').click(function () {
             else
                 toastr.error(data.message)
         }
+    }).catch(function (data) {
+        toastr.error(data.statusText + ' ' + data.status)
     })
 })

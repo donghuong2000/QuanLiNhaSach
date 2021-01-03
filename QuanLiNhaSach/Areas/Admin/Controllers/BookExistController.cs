@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using QuanLiNhaSach.Data;
@@ -9,6 +10,7 @@ using QuanLiNhaSach.Data;
 namespace QuanLiNhaSach.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = "Admin,Manager")]
     public class BookExistController : Controller
     {
         private readonly ApplicationDbContext _db;
