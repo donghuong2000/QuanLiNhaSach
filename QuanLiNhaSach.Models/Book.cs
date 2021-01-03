@@ -24,7 +24,8 @@ namespace QuanLiNhaSach.Models
         public string Decription { get; set; }
         public float Price { get; set; }
         public int Quantity { get; set; }
-
+        public int new_first_exist { get; set; }
+        public int new_incurred_exist { get; set; }
         public virtual Category Category { get; set; }
         public virtual ICollection<BillDetail> BillDetail { get; set; }
         public virtual ICollection<BookEntryTicketDetail> BookEntryTicketDetail { get; set; }
