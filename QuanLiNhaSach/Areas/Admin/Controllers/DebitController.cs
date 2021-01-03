@@ -56,7 +56,7 @@ namespace QuanLiNhaSach.Areas.Admin.Controllers
             DebitDetail debitdetail = new DebitDetail();
             foreach (var item in customerlist)
             {
-                if (item.new_last_debit != 0)
+                if (item.new_last_debit != 0 || ((item.new_first_debit + item.new_incurred_debit) == 0 && item.new_first_debit !=0)) // cuối tháng có nợ , hoặc nợ cuối tháng = 0 vì nợ đầu - nợ phát sinh hết( nợ đầu phải khác 0)
                 {
                     
                     debitdetail.Id = Guid.NewGuid().ToString();
@@ -107,7 +107,7 @@ namespace QuanLiNhaSach.Areas.Admin.Controllers
             Remove_debit_detail_in_month(timenow);
             foreach (var item in customerlist)
             {
-                if (item.old_last_debit != 0 ) // nếu đã tồn tại nợ cũ
+                if (item.old_last_debit != 0 || ((item.old_first_debit + item.old_first_debit) == 0 && item.old_first_debit != 0)) // nếu đã tồn tại nợ cũ
                 {
                     // cập nhật lại nợ phát sinh , nợ cuối của khách hàng
                     item.old_incurred_debit = item.old_incurred_debit + item.new_incurred_debit;
@@ -130,7 +130,7 @@ namespace QuanLiNhaSach.Areas.Admin.Controllers
                     _db.AppUsers.Update(item);
                     _db.SaveChanges(); 
                 }
-                else if (item.new_last_debit != 0) // nếu nợ cũ không tồn tại và nợ mới thì có -> phải tạo mới
+                else if (item.new_last_debit != 0 || ((item.new_first_debit + item.new_incurred_debit) == 0 && item.new_first_debit != 0)) // nếu nợ cũ không tồn tại và nợ mới thì có -> phải tạo mới
                 {
 
                     debitdetail.Id = Guid.NewGuid().ToString();
