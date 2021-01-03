@@ -45,10 +45,8 @@ function LoadDatable(data) {
     })
 }
 $('#button_create_debit').on('click', function () {
-    var time = $('#time_debit').val();
-    console.log(time)
     $.ajax({
-        url: "/admin/debit/Create_List_Debit/" + time,
+        url: "/admin/debit/Create_List_Debit/" ,
         success: function (data) {
             if (data.success) {
                 swalWithBootstrapButtons.fire(
@@ -72,10 +70,8 @@ $('#button_create_debit').on('click', function () {
 });
 
 $('#button_update_debit').on('click', function () {
-    var time = $('#time_debit').val();
-    console.log(time)
     $.ajax({
-        url: "/admin/debit/Update_List_Debit/" + time,
+        url: "/admin/debit/Update_List_Debit/" ,
         success: function (data) {
             if (data.success) {
                 swalWithBootstrapButtons.fire(
