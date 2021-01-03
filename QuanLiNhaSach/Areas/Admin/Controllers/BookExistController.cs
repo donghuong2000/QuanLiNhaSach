@@ -26,7 +26,7 @@ namespace QuanLiNhaSach.Areas.Admin.Controllers
                 .Select(x => new
                 {
                     id = x.Id,
-                    book = x.FirstExist,
+                    book = x.Book.Name,
                     date = x.TimeRecord.ToString("MM-yyyy"),
                     firstexist = x.FirstExist,
                     incurredexist = x.IncurredExist,
