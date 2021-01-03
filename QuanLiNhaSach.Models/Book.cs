@@ -32,7 +32,7 @@ namespace QuanLiNhaSach.Models
 
         public int new_first_exist { get; set; }
         public int new_incurred_exist { get; set; }
-        public int quantity { get; set; } // new_last_exist
+        public int Quantity { get; set; } // new_last_exist
 
 
 
