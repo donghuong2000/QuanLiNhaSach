@@ -103,6 +103,7 @@ namespace QuanLiNhaSach.Areas.Admin.Controllers
                 return Json(new { success = false, message = "Chưa tạo báo cáo của tháng hiện tại, nên không thể cập nhật báo cáo được" });
             var customerlist = _usermanager.GetUsersInRoleAsync("Customer").Result; // tạo 1 list customer role là khách hàng từ list user
             DebitDetail debitdetail = new DebitDetail();
+            // xóa các debit detail cũ của tháng đó đi
             Remove_debit_detail_in_month(timenow);
             foreach (var item in customerlist)
             {
@@ -113,8 +114,6 @@ namespace QuanLiNhaSach.Areas.Admin.Controllers
                     item.old_last_debit = item.old_first_debit + item.old_incurred_debit;
                     _db.AppUsers.Update(item);
                     _db.SaveChanges();
-
-                    // xóa các debit detail cũ của tháng đó đi
                     // add lại debit detail cho user với incurred mới
                     debitdetail.Id = Guid.NewGuid().ToString();
                     debitdetail.ApplicationUserId = item.Id;
