@@ -1,0 +1,64 @@
+﻿@model QuanLiNhaSach.Models.Receipt
+@{
+    ViewData["Title"] = "Tạo phiếu thu tiền";
+}
+<h1 class="text-center"> Tạo phiếu thu tiền</h1>
+
+
+<hr />
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="Create" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label class="control-label">Mã thu tiền</label>
+                @{
+                    if (ViewBag.id == null)
+                    {
+                        <input type="text" name="id" asp-for="Id" class="form-control"  readonly />
+                    }
+                    else
+                    {
+                        <input type="text" name="id" asp-for="Id" class="form-control" value=@ViewBag.id  readonly/>
+                    }
+
+                }
+            </div>
+            <div class="form-group">
+                <label class="control-label">Tên khách hàng</label>
+                <select name="customer" class="form-control" asp-for="ApplicationUserId" asp-items="ViewBag.Customer" id="select-customer">
+                    <option value="">---chọn Khách hàng---</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Địa chỉ</label>
+                <input asp-for="ApplicationUser.Address" type="text" class="form-control" id="address" readonly />
+            </div>
+            <div class="form-group">
+                <label class="control-label">Điện thoại</label>
+                <input asp-for="ApplicationUser.PhoneNumber" type="text" class="form-control" id="phone_number" readonly />
+            </div>
+            <div class="form-group">
+                <label class="control-label">Email</label>
+                <input asp-for="ApplicationUser.Email" type="text" class="form-control" id="email" readonly />
+            </div>
+            <div class="form-group">
+                <label class="control-label">Ngày thu tiền</label>
+                <input type="datetime-local" class="form-control" name="date_create" value=@ViewBag.DateCreate readonly />
+            </div>
+            <div class="form-group">
+                <label asp-for="Proceeds" class="control-label">Số tiền thu</label>
+                <input type="number" asp-for ="Proceeds" name="proceed" placeholder='Nhập số tiền cần thu' class="form-control" step="1" min="0" />
+            </div>
+            <div class="form-group ">
+                <input type="submit" value="Tạo phiếu thu tiền " class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
+@section Scripts{
+    <script src="~/Admin/js/receipt.js"></script>
+}
