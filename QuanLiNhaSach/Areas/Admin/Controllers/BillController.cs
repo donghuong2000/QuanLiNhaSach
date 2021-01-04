@@ -102,6 +102,14 @@ namespace QuanLiNhaSach.Areas.Admin.Controllers
                 _db.AppUsers.Update(user);
                 _db.SaveChanges(); // thêm nợ cho khách hàng
             }
+            foreach (var item in newBillDetail)
+            {
+                var bookin = _db.Books.FirstOrDefault(x => x.Id == item.BookId);
+                bookin.new_incurred_exist -= item.Count;
+                bookin.Quantity -= item.Count;
+                _db.Books.Update(bookin);
+                _db.SaveChanges();
+            }
             _db.SaveChanges();
             return RedirectToAction("Index");
         }

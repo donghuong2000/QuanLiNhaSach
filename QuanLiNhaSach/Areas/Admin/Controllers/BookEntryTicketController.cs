@@ -86,9 +86,15 @@ namespace QuanLiNhaSach.Areas.Admin.Controllers
             _db.BookEntryTickets.Add(ticket);
 
 
-            var result = BookExist(ticket);
-            if (result == true)
-                _db.SaveChanges(); // thêm nợ cho khách hàng
+            foreach (var item in newTicketDetail)
+            {
+                var bookin = _db.Books.FirstOrDefault(x => x.Id == item.BookId);
+                
+                bookin.new_incurred_exist += item.Count;
+                bookin.Quantity += item.Count;
+                _db.Books.Update(bookin);
+                _db.SaveChanges();
+            }
 
             _db.SaveChanges();
             return RedirectToAction("Index");
@@ -103,9 +109,15 @@ namespace QuanLiNhaSach.Areas.Admin.Controllers
         public IActionResult Create(string[] product, int[] qty, string[] category)
         {
             BookEntryTicket ticket = new BookEntryTicket();
-            if (product.Contains(null) || qty.Contains(0))
+            if (product.Contains(null))
             {
-                ModelState.AddModelError("", "Vui lòng chọn sách và nhập số lượng đầy đủ");
+                ModelState.AddModelError("", "Vui lòng chọn sách ");
+                Add_SelectList_For_ViewBag();
+                return View(ticket);
+            }
+            if (qty.Contains(0))
+            {
+                ModelState.AddModelError("", "Vui lòng nhập số lượng");
                 Add_SelectList_For_ViewBag();
                 return View(ticket);
             }
