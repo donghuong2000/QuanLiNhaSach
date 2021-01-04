@@ -37,6 +37,7 @@ namespace QuanLiNhaSach.Models
         public int old_first_exist { get; set; }
         public int old_incurred_exist { get; set; }
         public int old_Quantity { get; set; }
+
         public virtual Category Category { get; set; }
         public virtual ICollection<BillDetail> BillDetail { get; set; }
         public virtual ICollection<BookEntryTicketDetail> BookEntryTicketDetail { get; set; }

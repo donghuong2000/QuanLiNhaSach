@@ -84,6 +84,39 @@ namespace QuanLiNhaSach.Areas.Admin.Controllers
             try
             {
                 check_rule_2(bill);
+
+
+                bill.ApplicationUser = null;
+                bill.Staff = null;
+                var newBillDetail = bill.BillDetail.Select(x => new BillDetail { BillId = x.BillId, BookId = x.BookId, Count = x.Count }).ToList();
+                bill.BillDetail = newBillDetail;
+                // add bill 
+                _db.Bills.Add(bill);
+                foreach (var item in bill.BillDetail)
+                {
+                    // tìm cuốn sách đó trong danh sách sách
+                    var b = _db.Books.Find(item.BookId);
+                    // giảm đi số lượng đúng bằng số lượng đã bán trong bill
+                    b.new_incurred_exist -= item.Count;
+                    b.Quantity = b.new_first_exist + b.new_incurred_exist;
+                    _db.Books.Update(b); // cập nhật lại thay đổi
+                }
+                if (bill.IsDebit == true) // người dùng chọn nợ thay vì trả tiền mặt
+                {
+                    var result = Creat_Or_Update_Debit(bill); // tạo nợ mới - nếu tháng đó chưa nợ , hoặc update nợ cho incurred của tháng nợ đó nếu đã có 
+                    if (result == true)
+                    {
+                        var user = _db.AppUsers.FirstOrDefault(x => x.Id == bill.ApplicationUserId);
+                        user.Dept += bill.TotalPrice;
+                        _db.AppUsers.Update(user);
+                        _db.SaveChanges(); // thêm nợ cho khách hàng
+                    }
+
+                }
+                _db.SaveChanges(); // lưu thay đổi
+                return RedirectToAction("Index");
+
+
             }
             catch (Exception e)
             {
