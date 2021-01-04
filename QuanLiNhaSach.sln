@@ -9,7 +9,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QuanLiNhaSach.Data", "QuanL
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QuanLiNhaSach.Models", "QuanLiNhaSach.Models\QuanLiNhaSach.Models.csproj", "{6E34C705-1D14-4FF5-99EC-B59D49CA1CD4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuanLiNhaSach.Utility", "QuanLiNhaSach.Utility\QuanLiNhaSach.Utility.csproj", "{C5D64E89-58C0-4AB3-87CD-4F51A20D5A63}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QuanLiNhaSach.Utility", "QuanLiNhaSach.Utility\QuanLiNhaSach.Utility.csproj", "{C5D64E89-58C0-4AB3-87CD-4F51A20D5A63}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SlutionFolder", "SlutionFolder", "{A68B9145-C7B5-4553-A47F-DA03A2ACCDEE}"
+	ProjectSection(SolutionItems) = preProject
+		C:\Users\18110\OneDrive\Máy tính\BÁO-CÁO-CUỐi-KÌ-CNPM-final-.docx = C:\Users\18110\OneDrive\Máy tính\BÁO-CÁO-CUỐi-KÌ-CNPM-final-.docx
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
