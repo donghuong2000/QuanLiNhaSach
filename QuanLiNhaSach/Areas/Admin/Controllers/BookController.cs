@@ -106,7 +106,7 @@ namespace QuanLiNhaSach.Areas.Admin.Controllers
                 if (vm.Id == null)
                 {
                     //tạo mới
-                    var newBook = new Book() { Id = Guid.NewGuid().ToString(), Name = vm.Name,Author = vm.Author,CategoryId = vm.CategoryId,Quantity = vm.Quantity,DatePublish = vm.DatePublish,Decription = vm.Decription,ImgUrl = vm.ImgUrl };
+                    var newBook = new Book() { Id = Guid.NewGuid().ToString(),Price= vm.Price,Name = vm.Name,Author = vm.Author,CategoryId = vm.CategoryId,Quantity = vm.Quantity,DatePublish = vm.DatePublish,Decription = vm.Decription,ImgUrl = vm.ImgUrl };
                     _db.Books.Add(newBook);
                     _db.SaveChanges();
                     return RedirectToAction("index");

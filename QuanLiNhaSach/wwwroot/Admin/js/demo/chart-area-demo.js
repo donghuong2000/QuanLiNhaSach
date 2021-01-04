@@ -117,13 +117,109 @@ var myLineChart = new Chart(ctx, {
   }
 });
 
+var dtc = document.getElementById("myAreaDoanhthuChart");
+var myDoanhthuChart = new Chart(dtc, {
+    type: 'line',
+    data: {
+        labels: [],
+        datasets: [{
+            label: "Doanh thu ",
+            lineTension: 0.3,
+            backgroundColor: "rgba(78, 115, 223, 0.05)",
+            borderColor: "rgba(78, 115, 223, 1)",
+            pointRadius: 3,
+            pointBackgroundColor: "rgba(78, 115, 223, 1)",
+            pointBorderColor: "rgba(78, 115, 223, 1)",
+            pointHoverRadius: 3,
+            pointHoverBackgroundColor: "rgba(78, 115, 223, 1)",
+            pointHoverBorderColor: "rgba(78, 115, 223, 1)",
+            pointHitRadius: 10,
+            pointBorderWidth: 2,
+            data: [],
+        }],
+    },
+    options: {
+        maintainAspectRatio: false,
+        layout: {
+            padding: {
+                left: 10,
+                right: 25,
+                top: 25,
+                bottom: 0
+            }
+        },
+        scales: {
+            xAxes: [{
+                time: {
+                    unit: 'date'
+                },
+                gridLines: {
+                    display: false,
+                    drawBorder: false
+                },
+                ticks: {
+                    maxTicksLimit: 7
+                }
+            }],
+            yAxes: [{
+                ticks: {
+                    maxTicksLimit: 5,
+                    padding: 10,
+                    // Include a dollar sign in the ticks
+                    callback: function (value, index, values) {
+                        return number_format(value) + ' VND';
+                    }
+                },
+                gridLines: {
+                    color: "rgb(234, 236, 244)",
+                    zeroLineColor: "rgb(234, 236, 244)",
+                    drawBorder: false,
+                    borderDash: [2],
+                    zeroLineBorderDash: [2]
+                }
+            }],
+        },
+        legend: {
+            display: false
+        },
+        tooltips: {
+            backgroundColor: "rgb(255,255,255)",
+            bodyFontColor: "#858796",
+            titleMarginBottom: 10,
+            titleFontColor: '#6e707e',
+            titleFontSize: 14,
+            borderColor: '#dddfeb',
+            borderWidth: 1,
+            xPadding: 15,
+            yPadding: 15,
+            displayColors: false,
+            intersect: false,
+            mode: 'index',
+            caretPadding: 10,
+            callbacks: {
+                label: function (tooltipItem, chart) {
+                    var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
+                    return datasetLabel + ': ' + number_format(tooltipItem.yLabel) + ' VND';
+                }
+            }
+        }
+    }
+});
 $(document).ready(function () {
 
     AjaxLineChartCall('/admin/home/Statistical_DeptCustomer', 'id=388c0b1e-c0a4-485c-858e-c4294df4d0c4');
+
+    AjaxDoanhthuChartCall('/admin/home/Statistical_Revenue');
 })
 
 
-
+function AjaxDoanhthuChartCall(url, data) {
+    $.getJSON(url, data).done(function (response) {
+        myDoanhthuChart.data.labels = response.labels;
+        myDoanhthuChart.data.datasets[0].data = response.values;
+        myDoanhthuChart.update();
+    })
+}
 
 function AjaxLineChartCall(url,data) {
     $.getJSON(url, data).done(function (response) {
@@ -137,6 +233,14 @@ function AjaxLineChartCall(url,data) {
 $('#thongke').on('change', '.thongke_input', function () {
 
     data = "id=" + $('#userid').val() + '&' + 'date=' + $('#date_thongke').val();
+    console.log(data);
     AjaxLineChartCall('/admin/home/Statistical_DeptCustomer', data);
+
+})
+$('#thongkedt').on('change', '.thongke_inputdt', function () {
+
+    data = "id=" + $('#useriddt').val() + '&' + 'date=' + $('#date_thongkedt').val();
+    console.log(data);
+    AjaxDoanhthuChartCall('/admin/home/Statistical_Revenue', data);
 
 })

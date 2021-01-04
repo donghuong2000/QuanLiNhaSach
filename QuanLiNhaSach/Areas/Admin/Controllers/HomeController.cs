@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using QuanLiNhaSach.Data;
+using QuanLiNhaSach.Models;
 using System;
 using System.Linq;
 
@@ -13,13 +15,26 @@ namespace QuanLiNhaSach.Areas.Admin.Controllers
     public class HomeController : Controller
     {
         private readonly ApplicationDbContext _db;
-        public HomeController(ApplicationDbContext db)
+        private readonly UserManager<AppUser> _userManager;
+        public HomeController(ApplicationDbContext db, UserManager<AppUser> userManager)
         {
             _db = db;
+            _userManager = userManager;
         }
         public IActionResult Index()
         {
-            ViewBag.UserList = new SelectList(_db.AppUsers.ToList(), "Id", "UserName");
+            ViewBag.DoanhThu = _db.Bills.Select(x => x.TotalPrice).Sum().ToString("#,###") + " VND";
+            ViewBag.No = _db.AppUsers.Select(x => x.new_last_debit).Sum().ToString("#,###") + " VND";
+
+
+            var list = _userManager.GetUsersInRoleAsync("Customer").Result.ToList();
+
+
+            var adminlist = _userManager.Users.Where(x => !list.Contains(x)).ToList();
+
+
+            ViewBag.UserAdminList=new SelectList(adminlist, "Id", "UserName");
+            ViewBag.UserList = new SelectList(list, "Id", "UserName");
             return View();
         }
         // thống kê nợ khách hàng
@@ -57,7 +72,45 @@ namespace QuanLiNhaSach.Areas.Admin.Controllers
             
         }
 
+        public IActionResult Statistical_Revenue(string id,DateTime? date)
+        {
+            var dt = _db.Bills.Include(x => x.Staff).ToList();
 
+            
+            // lấy Doanh thu theo tháng của 1 tháng nào đó
+            if (id != null)
+            {
+                var labels = new string[12];
+                var values = new float[12];
+                var time = date == null ? DateTime.Now : date.GetValueOrDefault();
+                var obj = _db.Bills.Where(x => x.StaffId == id).ToList();
+                for (int i = 0; i < 12; i++)
+                {
+                    var month = time.AddMonths((12 - i) * -1).ToString("MM-yyyy");
+                    labels[i] = month;
+                    //lấy doanh thu tương ứng với tháng đó
+                    var a = obj.Where(x => x.DateCreate.ToString("MM-yyyy") == month).ToList();
+                    values[i] = a.Sum(x => x.TotalPrice);
+                }
+                return Json(new { labels, values });
+
+            }
+            // lấy doanh thu của tất cả
+            else
+            {
+                
+                    var obj = dt.GroupBy(X => X.Staff.UserName).Select(s => new
+                    {
+                        name = s.Key,
+                        sum = s.Sum(x => x.TotalPrice)
+                    });
+                    var values = obj.Select(x => x.sum).ToArray();
+                    var labels = obj.Select(x => x.name).ToArray();
+                    return Json(new { labels, values });
+                
+            }
+
+        }
         public IActionResult Statistical_Book()
         {
             var obj = _db.BillDetails.Include(x => x.Book)

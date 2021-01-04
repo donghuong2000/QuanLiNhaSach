@@ -69,9 +69,11 @@ $('#button_create_exist').on('click', function () {
 
 });
 $('#button_update_exist').on('click', function () {
+    Swal.showLoading()
     $.ajax({
         url: "/admin/bookexist/Update_Report/",
         success: function (data) {
+            Swal.hideLoading()
             if (data.success) {
                 swalWithBootstrapButtons.fire(
                     'Đã cập nhật báo cáo thành công',

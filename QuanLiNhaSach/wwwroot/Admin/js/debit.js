@@ -70,9 +70,11 @@ $('#button_create_debit').on('click', function () {
 });
 
 $('#button_update_debit').on('click', function () {
+    Swal.showLoading()
     $.ajax({
         url: "/admin/debit/Update_List_Debit/" ,
         success: function (data) {
+            Swal.hideLoading()
             if (data.success) {
                 swalWithBootstrapButtons.fire(
                     'Đã cập báo cáo thành công',
