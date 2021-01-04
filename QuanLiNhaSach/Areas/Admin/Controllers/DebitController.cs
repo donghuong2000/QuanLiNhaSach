@@ -109,7 +109,7 @@ namespace QuanLiNhaSach.Areas.Admin.Controllers
             Remove_debit_detail_in_month(timenow);
             foreach (var item in customerlist)
             {
-                if (item.old_last_debit != 0 || ((item.old_first_debit + item.old_first_debit) == 0 && item.old_first_debit != 0)) // nếu đã tồn tại nợ cũ
+                if (item.old_last_debit != 0 || ((item.old_first_debit + item.old_incurred_debit) == 0 && item.old_first_debit != 0)) // nếu đã tồn tại nợ cũ
                 {
                     // cập nhật lại nợ phát sinh , nợ cuối của khách hàng
                     item.old_incurred_debit = item.old_incurred_debit + item.new_incurred_debit;
