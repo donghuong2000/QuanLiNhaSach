@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using QuanLiNhaSach.Data;
 using QuanLiNhaSach.Models;
@@ -9,6 +10,7 @@ using QuanLiNhaSach.Models;
 namespace QuanLiNhaSach.Areas.Admin.Controllers
 {
     [Area("admin")]
+    [Authorize(Roles = "Admin,Manager")]
     public class CategoryController : Controller
     {
         private readonly ApplicationDbContext _db;

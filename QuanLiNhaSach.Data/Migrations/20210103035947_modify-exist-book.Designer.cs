@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using QuanLiNhaSach.Data;
 
 namespace QuanLiNhaSach.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210103035947_modify-exist-book")]
+    partial class modifyexistbook
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -309,15 +311,6 @@ namespace QuanLiNhaSach.Data.Migrations
                     b.Property<int>("new_incurred_exist")
                         .HasColumnType("int");
 
-                    b.Property<int>("old_Quantity")
-                        .HasColumnType("int");
-
-                    b.Property<int>("old_first_exist")
-                        .HasColumnType("int");
-
-                    b.Property<int>("old_incurred_exist")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("CategoryId");
@@ -514,15 +507,6 @@ namespace QuanLiNhaSach.Data.Migrations
                         .HasColumnType("real");
 
                     b.Property<float>("new_last_debit")
-                        .HasColumnType("real");
-
-                    b.Property<float>("old_first_debit")
-                        .HasColumnType("real");
-
-                    b.Property<float>("old_incurred_debit")
-                        .HasColumnType("real");
-
-                    b.Property<float>("old_last_debit")
                         .HasColumnType("real");
 
                     b.HasDiscriminator().HasValue("AppUser");

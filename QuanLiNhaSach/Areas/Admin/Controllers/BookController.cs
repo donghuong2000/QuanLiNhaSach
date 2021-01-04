@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -15,6 +16,7 @@ using QuanLiNhaSach.Models.ViewModels;
 namespace QuanLiNhaSach.Areas.Admin.Controllers
 {
     [Area("admin")]
+    [Authorize(Roles = "Admin,Manager")]
     public class BookController : Controller
     {
         private readonly ApplicationDbContext _db;
@@ -43,6 +45,7 @@ namespace QuanLiNhaSach.Areas.Admin.Controllers
             }).ToList();
             return Json(new { data = obj });
         }
+        [Authorize(Roles = "Admin")]
         public IActionResult Upsert(string id)
         {
             // cho selectlist của view
@@ -70,6 +73,7 @@ namespace QuanLiNhaSach.Areas.Admin.Controllers
 
         }
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public IActionResult Upsert(BookViewModel vm)
         {
             // cho selectlist của view
@@ -131,6 +135,7 @@ namespace QuanLiNhaSach.Areas.Admin.Controllers
             return View(vm);
         }
         [HttpDelete]
+        [Authorize(Roles = "Admin")]
         public IActionResult Delete(string id)
         {
             try

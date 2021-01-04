@@ -1,32 +1,37 @@
 ﻿$(document).ready(function () {
     $('#dataTable').DataTable({
         "ajax": {
-            "url":"/Admin/book/getall"
+            "url":"/Admin/customer/getall"
         },
         "columns": [
+            { "data":"username"},
+            { "data":"name"},
+            { "data": "email" },
+            { "data": "role" },
             {
-                "data": "imgUrl",
+                "data": { islock:"islock",id:"id" },
                 "render": function (data) {
-                    return `
-                            <img src="${data}" height = 50 width = 40 class="rounded"/>`
+                    if (data.islock) {
+                        return `<div class="text-center">
+                                    <a class="btn btn-danger" onclick=LockUnLock("${data.id}")><i class="fas fa-lock"></i></a>
+                                </div> `
+                    }
+                    else {
+                        return `<div class="text-center">
+                                    <a class="btn btn-success" onclick=LockUnLock("${data.id}")><i class="fas fa-lock-open"></i></a>
+                                </div> `
+                    }
                 }
             },
-
-            { "data":"name"},
-            { "data": "author" },
-            { "data": "category" },
-            { "data": "decription" },
-            { "data": "quantity" },
-            { "data": "datePublish" },
             {
                 "data": "id",
                 "render": function (data) {
                     return `<div class="text-center">
-                            <a href="/Admin/book/Upsert/${data}" class="btn btn-success text-white" style="cursor:pointer">
+                            <a href="/Admin/customer/Upsert/${data}" class="btn btn-success text-white" style="cursor:pointer">
                                 <i class="fas fa-edit"></i> 
                             </a>
 
-                            <a  onclick=Delete("/Admin/book/Delete/${data}") class="btn btn-danger text-white" style="cursor:pointer">
+                            <a  onclick=Delete("/Admin/customer/Delete/${data}") class="btn btn-danger text-white" style="cursor:pointer">
                                 <i class="fas fa-trash-alt"></i> 
                             </a>
 
@@ -76,13 +81,6 @@ function Delete(url) {
                     }
                 }
 
-            }).catch(function (data) {
-                swalWithBootstrapButtons.fire(
-                    'Cancelled',
-                    data.statusText + ' ' + data.status,
-                    'error'
-                )
-                
             })
 
         }
@@ -97,7 +95,7 @@ function Delete(url) {
 }
 function LockUnLock(data) {
     $.ajax({
-        url: '/admin/user/lockunlock/',
+        url: '/admin/customer/lockunlock/',
         data: { id: data },
         success: function (result) {
             if (result.success) {

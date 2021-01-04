@@ -1,0 +1,255 @@
+﻿@model QuanLiNhaSach.Models.ViewModels.UserViewModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+
+
+<div class="row">
+    <div class="col-3">
+        <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+
+            <a class="nav-link active" id="v-pills-profile-tab" data-toggle="pill" href="#v-pills-profile" role="tab" aria-controls="v-pills-profile" aria-selected="false">Thông tin cá nhân</a>
+            <a class="nav-link" id="v-pills-messages-tab" data-toggle="pill" href="#v-pills-messages" role="tab" aria-controls="v-pills-messages" aria-selected="false">Bảo mật và đăng nhập</a>
+            <a class="nav-link" id="v-pills-settings-tab" data-toggle="pill" href="#v-pills-settings" role="tab" aria-controls="v-pills-settings" aria-selected="false">Quản lí dư nợ</a>
+            <a class="nav-link" id="v-pills-history-tab" data-toggle="pill" href="#v-pills-history" role="tab" aria-controls="v-pills-history" aria-selected="false">Lịch sử mua hàng</a>
+        </div>
+    </div>
+    <div class="col-9">
+        <div class="tab-content" id="v-pills-tabContent">
+            <div class="tab-pane fade show active" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab">
+                <div class="row">
+                    <div class="col-md-12">
+                        <form asp-action="Index">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            <div hidden class="form-group">
+                                <label asp-for="Id" class="control-label"></label>
+                                <input asp-for="Id" class="form-control" />
+                                <span asp-validation-for="Id" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="Username" class="control-label"></label>
+                                <input readonly asp-for="Username" class="form-control" />
+                                <span asp-validation-for="Username" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="Mail" class="control-label"></label>
+                                <input asp-for="Mail" class="form-control" />
+                                <span asp-validation-for="Mail" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="Phone" class="control-label"></label>
+                                <input asp-for="Phone" class="form-control" />
+                                <span asp-validation-for="Phone" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="Name" class="control-label"></label>
+                                <input asp-for="Name" class="form-control" />
+                                <span asp-validation-for="Name" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="DateOfBirth" class="control-label"></label>
+                                <input asp-for="DateOfBirth" class="form-control" />
+                                <span asp-validation-for="DateOfBirth" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="Address" class="control-label"></label>
+                                <input asp-for="Address" class="form-control" />
+                                <span asp-validation-for="Address" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <input type="submit" value="Cập nhập" class="form-control btn btn-primary" />
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+            <div class="tab-pane fade" id="v-pills-messages" role="tabpanel" aria-labelledby="v-pills-messages-tab">
+                <h3 class="text-center">Đổi mật khẩu</h3>
+                <form id="changePasswordForm">
+                    <div id="validateError" class="alert-danger rounded"></div>
+                    <div id="validateSuccess" class="alert-success rounded"></div>
+                    <div class="form-group">
+                        <label for="currentPassword">Mật khẩu hiện tại</label>
+                        <input type="password" class="form-control" id="currentPassword">
+                    </div>
+                    <div class="form-group">
+                        <label for="newPassword">Mật khẩu mới</label>
+                        <input type="password" class="form-control" id="newPassword">
+                    </div>
+                    <div class="form-group">
+                        <label for="cpnewPassword">Xác nhận mật khẩu mới</label>
+                        <input type="password" class="form-control" id="cpnewPassword">
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Cập nhập mật khẩu</button>
+                </form>
+            </div>
+            <div class="tab-pane fade" id="v-pills-settings" role="tabpanel" aria-labelledby="v-pills-settings-tab">
+
+                <h5 class="text-center">Nợ hiện tại: @ViewBag.dept </h5>
+                <div class="card-body">
+
+                    <div class="table-responsive">
+                        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+
+                                    <th>Tháng Nợ</th>
+                                    <th>Nợ đầu</th>
+                                    <th>Phát sinh</th>
+                                    <th>Nợ cuối</th>
+                                </tr>
+                            </thead>
+                            <tfoot>
+                                <tr>
+
+                                    <th>Tháng Nợ</th>
+                                    <th>Nợ đầu</th>
+                                    <th>Phát sinh</th>
+                                    <th>Nợ cuối</th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+                <hr />
+                <br />
+                <h4 class="text-center">Lịch sử trả nợ </h4>
+                <div class="table-responsive">
+                    <table class="table table-bordered" id="deptdataTable" width="100%" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th>Mã phiếu</th>
+                                <th>Tên khách hàng</th>
+                                <th>Ngày thu tiền </th>
+                                <th>Số tiền thu</th>
+                                <th>Thao tác</th>
+
+                            </tr>
+                        </thead>
+                        <tfoot>
+                            <tr>
+                                <th>Mã phiếu</th>
+                                <th>Tên khách hàng</th>
+                                <th>Ngày thu tiền </th>
+                                <th>Số tiền thu</th>
+                                <th>Thao tác</th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+
+            
+            <div class="tab-pane fade" id="v-pills-history" role="tabpanel" aria-labelledby="v-pills-history-tab">
+
+                <h5 class="text-center">Nợ hiện tại: @ViewBag.dept </h5>
+                <div class="card-body">
+
+                    <div class="table-responsive">
+                        <table class="table table-bordered" id="historytable" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th>Mã hóa đơn</th>
+                                    <th>Người lập hóa đơn</th> 
+                                    <th>Ngày lập </th>
+                                    <th>Tổng tiền</th>
+                                    <th></th>
+
+                                </tr>
+                            </thead>
+                            <tfoot>
+                                <tr>
+                                    <th>Mã hóa đơn</th>
+                                    <th>Người lập hóa đơn</th>
+                                    <th>Ngày lập </th>
+                                    <th>Tổng tiền</th>
+                                    <th></th>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts{
+    <script src="~/Admin/vendor/datatables/jquery.dataTables.js"></script>
+    <script src="~/Admin/vendor/datatables/dataTables.bootstrap4.js"></script>
+    <script>
+        $(document).ready(function () {
+            
+            $('#dataTable').DataTable({
+                "ajax": {
+                    "url": "/Account/getDebit"
+                },
+                "columns": [
+                   
+                    { "data": "date" },
+                    { "data": "firstdebit" },
+                    { "data": "incurreddebit" },
+                    { "data": "lastdebit" },
+
+                ]
+            })
+            $('#historytable').DataTable({
+                "ajax": {
+                    "url": "/Account/getHistory"
+                },
+                "columns": [
+                    { "data": "id" },
+                    { "data": "staff" },
+                    { "data": "date" },
+                    { "data": "total" },
+                    {
+                        "data": "id",
+                        "render": function (data) {
+                            return `<div class="text-center">
+                            <a href="/Account/billDetail/${data}" class="btn btn-success text-white" style="cursor:pointer">
+                                chi tiết
+                            </a>
+                        </div>
+                    `}
+                    },
+
+                ]
+            })
+            $('#deptdataTable').DataTable({
+                "ajax": {
+                    "url": "/Account/GetDebitHistory"
+                },
+                "columns": [
+                    { "data": "id" },
+                    { "data": "customer" },
+                    { "data": "datecreate" },
+                    { "data": "proceed" },
+                    {
+                        "data": "id",
+                        "render": function (data) {
+                            return `<div class="text-center">
+                            <a href="/Account/ReceiptDetail/${data}" class="btn btn-success text-white" style="cursor:pointer">
+                                chi tiết
+                            </a>
+                        </div>
+                    `}
+                    },
+
+                ]
+            })
+        })
+    </script>
+}
+@section Header{ 
+    <link href="~/Admin/vendor/datatables/dataTables.bootstrap4.css" rel="stylesheet" />
+}
+
+
+
+
