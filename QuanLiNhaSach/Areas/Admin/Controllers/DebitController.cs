@@ -48,21 +48,17 @@ namespace QuanLiNhaSach.Areas.Admin.Controllers
             }
             return Json(new { data = obj });
         }
-        public IActionResult Create_List_Debit(string id) // hàm sẽ tạo debit detail từ new first debit, new incurred debit , new last debit của user
+        public IActionResult Create_List_Debit() // hàm sẽ tạo debit detail từ new first debit, new incurred debit , new last debit của user
         {
-            if (id == null)
-                return Json(new { success = false, message = "Vui lòng chọn tháng cần báo cáo trước khi tạo báo cáo !" }); 
-            var timenow = DateTime.Parse(id); // biến string nhập vào là 1 ngày
+            var timenow = DateTime.Parse(DateTime.Now.ToString("MM-yyyy")); // biến string nhập vào là 1 ngày
             var result = IsAvailable_DebitDetail_Has_Time(timenow);
             if (result == false)
-                return Json(new { success = false, message = "Đã tạo báo cáo của tháng này rồi, vui lòng không tạo lại" });
-            if((timenow - DateTime.Now).TotalDays > 0)
-                return Json(new { success = false, message = "Thời gian hiện tại chưa tới tháng cần tạo báo cáo, vui lòng chọn lại" });
+                return Json(new { success = false, message = "Đã tạo báo cáo của tháng hiện tại rồi, vui lòng không tạo lại" });
             var customerlist = _usermanager.GetUsersInRoleAsync("Customer").Result; // tạo 1 list customer role là khách hàng từ list user
             DebitDetail debitdetail = new DebitDetail();
             foreach (var item in customerlist)
             {
-                if (item.new_last_debit != 0)
+                if (item.new_last_debit != 0 || ((item.new_first_debit + item.new_incurred_debit) == 0 && item.new_first_debit !=0)) // cuối tháng có nợ , hoặc nợ cuối tháng = 0 vì nợ đầu - nợ phát sinh hết( nợ đầu phải khác 0)
                 {
                     
                     debitdetail.Id = Guid.NewGuid().ToString();
@@ -72,6 +68,12 @@ namespace QuanLiNhaSach.Areas.Admin.Controllers
                     debitdetail.IncurredDebit = item.new_incurred_debit;
                     debitdetail.LastDebit = item.new_last_debit;
                     _db.DebitDetails.Add(debitdetail);
+                    _db.SaveChanges();
+                    // lưu lại giá trị cũ để update
+                    item.old_first_debit = item.new_first_debit;
+                    item.old_incurred_debit = item.new_incurred_debit;
+                    item.old_last_debit = item.new_last_debit;
+                    _db.AppUsers.Update(item);
                     _db.SaveChanges();
                     item.new_first_debit = item.new_last_debit;
                     item.new_incurred_debit = 0;
@@ -94,6 +96,79 @@ namespace QuanLiNhaSach.Areas.Admin.Controllers
                 }
             }
             return true; // được phép add
+        }
+        public IActionResult Update_List_Debit()
+        {
+            var timenow = DateTime.Parse(DateTime.Now.ToString("MM-yyyy"));
+            var result = IsAvailable_DebitDetail_Has_Time(timenow);
+            if(result==true)
+                return Json(new { success = false, message = "Chưa tạo báo cáo của tháng hiện tại, nên không thể cập nhật báo cáo được" });
+            var customerlist = _usermanager.GetUsersInRoleAsync("Customer").Result; // tạo 1 list customer role là khách hàng từ list user
+            DebitDetail debitdetail = new DebitDetail();
+            // xóa các debit detail cũ của tháng đó đi
+            Remove_debit_detail_in_month(timenow);
+            foreach (var item in customerlist)
+            {
+                if (item.old_last_debit != 0 || ((item.old_first_debit + item.old_first_debit) == 0 && item.old_first_debit != 0)) // nếu đã tồn tại nợ cũ
+                {
+                    // cập nhật lại nợ phát sinh , nợ cuối của khách hàng
+                    item.old_incurred_debit = item.old_incurred_debit + item.new_incurred_debit;
+                    item.old_last_debit = item.old_first_debit + item.old_incurred_debit;
+                    _db.AppUsers.Update(item);
+                    _db.SaveChanges();
+                    // add lại debit detail cho user với incurred mới
+                    debitdetail.Id = Guid.NewGuid().ToString();
+                    debitdetail.ApplicationUserId = item.Id;
+                    debitdetail.TimeRecord = timenow;
+                    debitdetail.FirstDebit = item.old_first_debit;
+                    debitdetail.IncurredDebit = item.old_incurred_debit;
+                    debitdetail.LastDebit = item.old_last_debit;
+                    _db.DebitDetails.Add(debitdetail);
+                    _db.SaveChanges();
+                    // reset lại new debit sau khi update
+                    item.new_first_debit = item.new_last_debit;
+                    item.new_incurred_debit = 0;
+                    item.new_last_debit = item.new_first_debit + item.new_incurred_debit;
+                    _db.AppUsers.Update(item);
+                    _db.SaveChanges(); 
+                }
+                else if (item.new_last_debit != 0 || ((item.new_first_debit + item.new_incurred_debit) == 0 && item.new_first_debit != 0)) // nếu nợ cũ không tồn tại và nợ mới thì có -> phải tạo mới
+                {
+
+                    debitdetail.Id = Guid.NewGuid().ToString();
+                    debitdetail.ApplicationUserId = item.Id;
+                    debitdetail.TimeRecord = timenow;
+                    debitdetail.FirstDebit = item.new_first_debit;
+                    debitdetail.IncurredDebit = item.new_incurred_debit;
+                    debitdetail.LastDebit = item.new_last_debit;
+                    _db.DebitDetails.Add(debitdetail);
+                    _db.SaveChanges();
+                    // lưu lại giá trị cũ để update
+                    item.old_first_debit = item.new_first_debit;
+                    item.old_incurred_debit = item.new_incurred_debit;
+                    item.old_last_debit = item.new_last_debit;
+                    _db.AppUsers.Update(item);
+                    _db.SaveChanges();
+                    item.new_first_debit = item.new_last_debit;
+                    item.new_incurred_debit = 0;
+                    item.new_last_debit = item.new_first_debit + item.new_incurred_debit;
+                    _db.AppUsers.Update(item);
+                    _db.SaveChanges();
+                }
+            }
+            return Json(new { success = true, message = "" });
+        }
+        public void Remove_debit_detail_in_month(DateTime time) // xóa các debit detail có tháng ghi là tháng đầu vào
+        {
+            var list_debit_detail_in_month = _db.DebitDetails.ToList();
+            foreach(var item in list_debit_detail_in_month)
+            {
+                if(item.TimeRecord == time)
+                {
+                    _db.DebitDetails.Remove(item);
+                    _db.SaveChanges();
+                }
+            }    
         }
         //DateTime timenow = DateTime.Parse(id);
         //var time_now = timenow.ToString("MM-yyyy");

@@ -44,11 +44,9 @@ function LoadDatable(data) {
         ]
     })
 }
-$('#button_update_debit').on('click', function () {
-    var time = $('#time_debit').val();
-    console.log(time)
+$('#button_create_debit').on('click', function () {
     $.ajax({
-        url: "/admin/debit/Create_List_Debit/" + time,
+        url: "/admin/debit/Create_List_Debit/" ,
         success: function (data) {
             if (data.success) {
                 swalWithBootstrapButtons.fire(
@@ -71,6 +69,30 @@ $('#button_update_debit').on('click', function () {
 
 });
 
+$('#button_update_debit').on('click', function () {
+    $.ajax({
+        url: "/admin/debit/Update_List_Debit/" ,
+        success: function (data) {
+            if (data.success) {
+                swalWithBootstrapButtons.fire(
+                    'Đã cập báo cáo thành công',
+                    data.message,
+                    'success'
+                );
+                $('#dataTable').DataTable().ajax.reload();
+            }
+            else {
+                swalWithBootstrapButtons.fire(
+                    'Không thể cập nhật báo cáo , vui lòng kiểm tra lại',
+                    data.message,
+                    'error'
+                )
+            }
+        }
+
+    })
+
+});
 
 
 
