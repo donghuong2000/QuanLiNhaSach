@@ -1,5 +1,4 @@
-﻿
-var value = ""
+﻿var value = ""
 
 $(document).ready(function () {
     console.log(value)
@@ -45,9 +44,51 @@ function LoadDatable(data) {
     })
 
 }
+$('#button_create_exist').on('click', function () {
+    $.ajax({
+        url: "/admin/bookexist/ExistReport/",
+        success: function (data) {
+            if (data.success) {
+                swalWithBootstrapButtons.fire(
+                    'Đã tạo báo cáo thành công',
+                    data.message,
+                    'success'
+                );
+                $('#dataTable').DataTable().ajax.reload();
+            }
+            else {
+                swalWithBootstrapButtons.fire(
+                    'Không thể tạo báo cáo , vui lòng kiểm tra lại',
+                    data.message,
+                    'error'
+                )
+            }
+        }
 
+    })
 
+});
+$('#button_update_exist').on('click', function () {
+    $.ajax({
+        url: "/admin/bookexist/Update_Report/",
+        success: function (data) {
+            if (data.success) {
+                swalWithBootstrapButtons.fire(
+                    'Đã cập nhật báo cáo thành công',
+                    data.message,
+                    'success'
+                );
+                $('#dataTable').DataTable().ajax.reload();
+            }
+            else {
+                swalWithBootstrapButtons.fire(
+                    'Không thể cập nhật báo cáo , vui lòng kiểm tra lại',
+                    data.message,
+                    'error'
+                )
+            }
+        }
 
+    })
 
-
-
+});
