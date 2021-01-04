@@ -116,8 +116,35 @@
                         </table>
                     </div>
                 </div>
+                <hr />
+                <br />
+                <h4 class="text-center">Lịch sử trả nợ </h4>
+                <div class="table-responsive">
+                    <table class="table table-bordered" id="deptdataTable" width="100%" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th>Mã phiếu</th>
+                                <th>Tên khách hàng</th>
+                                <th>Ngày thu tiền </th>
+                                <th>Số tiền thu</th>
+                                <th>Thao tác</th>
 
+                            </tr>
+                        </thead>
+                        <tfoot>
+                            <tr>
+                                <th>Mã phiếu</th>
+                                <th>Tên khách hàng</th>
+                                <th>Ngày thu tiền </th>
+                                <th>Số tiền thu</th>
+                                <th>Thao tác</th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
             </div>
+
+            
             <div class="tab-pane fade" id="v-pills-history" role="tabpanel" aria-labelledby="v-pills-history-tab">
 
                 <h5 class="text-center">Nợ hiện tại: @ViewBag.dept </h5>
@@ -186,6 +213,28 @@
                         "render": function (data) {
                             return `<div class="text-center">
                             <a href="/Account/billDetail/${data}" class="btn btn-success text-white" style="cursor:pointer">
+                                chi tiết
+                            </a>
+                        </div>
+                    `}
+                    },
+
+                ]
+            })
+            $('#deptdataTable').DataTable({
+                "ajax": {
+                    "url": "/Account/GetDebitHistory"
+                },
+                "columns": [
+                    { "data": "id" },
+                    { "data": "customer" },
+                    { "data": "datecreate" },
+                    { "data": "proceed" },
+                    {
+                        "data": "id",
+                        "render": function (data) {
+                            return `<div class="text-center">
+                            <a href="/Account/ReceiptDetail/${data}" class="btn btn-success text-white" style="cursor:pointer">
                                 chi tiết
                             </a>
                         </div>

@@ -138,10 +138,22 @@ namespace QuanLiNhaSach.Controllers
                     total = x.TotalPrice
                 });
             return Json(new { data = obj });
-
-
-
             
+        }
+        public async Task<IActionResult> GetDebitHistory()
+        {
+            var user = await _userManager.GetUserAsync(User);
+            var obj = _db.Receipts.Include(x => x.ApplicationUser)
+            .Where(x=>x.ApplicationUserId == user.Id)
+            .Select(x => new
+            {
+                id = x.Id,
+                customer = x.ApplicationUser.FullName,
+                datecreate = x.DateCreate,
+                proceed = x.Proceeds,
+            });
+            return Json(new { data = obj });
+
         }
         public IActionResult BillDetail(string id)
         {
@@ -158,6 +170,12 @@ namespace QuanLiNhaSach.Controllers
 
             bill.BillDetail = billDetails;
             return View(bill);
+
+        }
+        public IActionResult ReceiptDetail(string id)
+        {
+            var receipt = _db.Receipts.Include(x => x.ApplicationUser).FirstOrDefault(x => x.Id == id);
+            return View(receipt);
 
         }
     }
