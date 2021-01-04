@@ -38,7 +38,7 @@ namespace QuanLiNhaSach.Areas.Admin.Controllers
                     incurreddebit = x.IncurredDebit,
                     lastdebit = x.LastDebit,
                 }).ToList();
-          ;
+          
              
             if (id != null)
             {
