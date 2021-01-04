@@ -103,17 +103,13 @@ namespace QuanLiNhaSach.Areas.Admin.Controllers
                 }
                 if (bill.IsDebit == true) // người dùng chọn nợ thay vì trả tiền mặt
                 {
-                    var result = Creat_Or_Update_Debit(bill); // tạo nợ mới - nếu tháng đó chưa nợ , hoặc update nợ cho incurred của tháng nợ đó nếu đã có 
-                    if (result == true)
-                    {
-                        var user = _db.AppUsers.FirstOrDefault(x => x.Id == bill.ApplicationUserId);
-                        user.Dept += bill.TotalPrice;
-                        _db.AppUsers.Update(user);
-                        _db.SaveChanges(); // thêm nợ cho khách hàng
-                    }
-
+                    var user = _db.AppUsers.FirstOrDefault(x => x.Id == bill.ApplicationUserId);
+                    user.new_incurred_debit += bill.TotalPrice;
+                    user.new_last_debit = user.new_first_debit + user.new_incurred_debit;
+                    _db.AppUsers.Update(user);
+                    _db.SaveChanges(); // thêm nợ cho khách hàng
                 }
-                _db.SaveChanges(); // lưu thay đổi
+                _db.SaveChanges();
                 return RedirectToAction("Index");
 
 
@@ -124,22 +120,8 @@ namespace QuanLiNhaSach.Areas.Admin.Controllers
                 Add_SelectList_For_ViewBag();
                 return RedirectToAction("Create", new { bill = bill });
             }
-            bill.ApplicationUser = null;
-            bill.Staff = null;
-            var newBillDetail = bill.BillDetail.Select(x => new BillDetail { BillId = x.BillId, BookId = x.BookId, Count = x.Count }).ToList();
-            bill.BillDetail = newBillDetail;
-            // add bill 
-            _db.Bills.Add(bill);
-            if (bill.IsDebit == true) // người dùng chọn nợ thay vì trả tiền mặt
-            {
-                var user = _db.AppUsers.FirstOrDefault(x => x.Id == bill.ApplicationUserId);
-                user.new_incurred_debit += bill.TotalPrice;
-                user.new_last_debit = user.new_first_debit + user.new_incurred_debit;
-                _db.AppUsers.Update(user);
-                _db.SaveChanges(); // thêm nợ cho khách hàng
-            }
-            _db.SaveChanges();
-            return RedirectToAction("Index");
+
+            
         }
         [HttpPost]
         public IActionResult Create(string[] product, int[] qty, string customer, float total_amount, string check_debit, DateTime time_create) // check_debit : có check là on , uncheck là null

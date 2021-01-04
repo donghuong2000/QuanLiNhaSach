@@ -1,6 +1,5 @@
-﻿
-@{
-    ViewData["Title"] = "Báo cáo Nợ";
+﻿@{
+    ViewData["Title"] = "Báo cáo tồn kho";
 }
 
 <div class="card shadow mb-4">
@@ -11,6 +10,12 @@
     <h6 class="m-0 font-weight-bold text-danger text-center">Chọn tháng cần hiện báo cáo</h6>
     <div class="d-flex justify-content-center">
         <input style="width:300px" type="month" name='time_exist' id="time_exist" class="form-control">
+        <a class="btn btn-success text-white" style="cursor:pointer" id="button_create_exist">
+            Tạo báo cáo
+        </a>
+        <a class="btn btn-warning text-white" style="cursor:pointer" id="button_update_exist">
+            <i class="fas fa-sync"></i>
+        </a>
     </div>
     <div class="card-body">
 
@@ -54,4 +59,3 @@
     <link href="~/Admin/js/build/toastr.css" rel="stylesheet" />
     <link href="~/Admin/vendor/datatables/dataTables.bootstrap4.css" rel="stylesheet" />
 }
-
