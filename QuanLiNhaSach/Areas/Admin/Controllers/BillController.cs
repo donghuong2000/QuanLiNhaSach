@@ -89,8 +89,12 @@ namespace QuanLiNhaSach.Areas.Admin.Controllers
                 _db.Bills.Add(bill);
                 foreach (var item in bill.BillDetail)
                 {
+                    // tìm cuốn sách đó trong danh sách sách
                     var b = _db.Books.Find(item.BookId);
-                    b.Quantity -= item.Count;
+                    // giảm đi số lượng đúng bằng số lượng đã bán trong bill
+                    b.new_incurred_exist -= item.Count;
+                    b.Quantity = b.new_first_exist + b.new_incurred_exist;
+                    _db.Books.Update(b); // cập nhật lại thay đổi
                 }
                 if (bill.IsDebit == true) // người dùng chọn nợ thay vì trả tiền mặt
                 {
@@ -104,7 +108,7 @@ namespace QuanLiNhaSach.Areas.Admin.Controllers
                     }
 
                 }
-                _db.SaveChanges();
+                _db.SaveChanges(); // lưu thay đổi
                 return RedirectToAction("Index");
             }
             catch (Exception e)
