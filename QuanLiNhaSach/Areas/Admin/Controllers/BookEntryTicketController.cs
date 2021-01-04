@@ -96,7 +96,7 @@ namespace QuanLiNhaSach.Areas.Admin.Controllers
                 return RedirectToAction("Create", new { ticket = ticket });
             }
 
-            
+
         }
 
         private void Add_SelectList_For_ViewBag()
@@ -151,14 +151,14 @@ namespace QuanLiNhaSach.Areas.Admin.Controllers
             List<BookEntryTicketDetail> listticketdetail = new List<BookEntryTicketDetail>();
             for (int i = 0; i < product.Length; i++)
             {
-                BookEntryTicketDetail ticketdetail = new BookEntryTicketDetail() { BookId = product[i], Count = qty[i]};
+                BookEntryTicketDetail ticketdetail = new BookEntryTicketDetail() { BookId = product[i], Count = qty[i] };
                 listticketdetail.Add(ticketdetail);
             } // tao ra 1 list product tu 2 mang product va quantity
             var newlistticketdetail = listticketdetail.GroupBy(x => x.BookId)
                 .Select(x => new
                 {
                     bookid = x.Key,
-                    count = x.Sum(y => y.Count)                    
+                    count = x.Sum(y => y.Count)
                 }).ToList();
 
             var listticketdetail_update = newlistticketdetail.Select(x => new BookEntryTicketDetail { BookId = x.bookid, Count = x.count }).ToList();
@@ -180,7 +180,7 @@ namespace QuanLiNhaSach.Areas.Admin.Controllers
                 .FirstOrDefault(x => x.Id == id);
             if (book != null)
             {
-                return Json(new { success = true, category = book.Category.Name , author = book.Author});
+                return Json(new { success = true, category = book.Category.Name, author = book.Author });
             }
             return Json(new { success = false, category = "", author = "" });
 
@@ -195,7 +195,7 @@ namespace QuanLiNhaSach.Areas.Admin.Controllers
 
                     if (_db.Books.Find(item.BookId).Quantity >= rule.Max) // chỉ nhập khi đạt số lượng tối thiểu
                     {
-                        throw new Exception("Cuốn sách có tên \" " + item.Book.Name + " \" vi phạm quy định số một" + ",chỉ nhập sách khi số lượng tồn kho còn dưới " + rule.Max  + "quyển.");
+                        throw new Exception("Cuốn sách có tên \" " + item.Book.Name + " \" vi phạm quy định số một" + ",chỉ nhập sách khi số lượng tồn kho còn dưới " + rule.Max + "quyển.");
                     }
                     if (item.Count < rule.Min) // chỉ nhập khi đạt số lượng tối thiểu
                     {
@@ -206,160 +206,162 @@ namespace QuanLiNhaSach.Areas.Admin.Controllers
             }
 
         }
-        //// xử lý tồn sách
-        //private bool BookExist (BookEntryTicket ticket)
-        //{
-
-
-        //    var list_BookInTicket = _db.BookEntryTicketDetails.Include(x => x.Book).ToList();
-        //    foreach ( var bookin in list_BookInTicket)
-        //    {
-        //        BookExistDetail existdetail = null;
-        //        int qtyEntry = bookin.Count;
-        //        DateTime nearest_record = bookin.Book.DatePublish;
-        //        var list_exist_record = _db.BookExistDetails.Where(x => x.BookExistHeaderId == bookin.BookId).ToList();
-        //        bool check_break = false;
-        //        foreach( var item in list_exist_record)
-        //        {
-        //            var time = item.TimeRecord.ToString("MM-yyyy");
-        //            if (time == ticket.DateEntry.ToString("MM-yyyy")) // nếu có data tồn kho có tháng trùng với tháng ngày nhập sách thì chỉ cần update tháng đó
-        //            {
-        //                item.IncurredExist += qtyEntry; 
-        //                item.LastExist = item.FirstExist + item.IncurredExist; 
-        //                _db.BookExistDetails.Update(item);
-        //                _db.SaveChanges();
-        //                check_break = true;
-        //                break;
-        //            }
-        //            else if ((item.TimeRecord - ticket.DateEntry).TotalDays < 0 && (item.TimeRecord - nearest_record).TotalDays >= 0) 
-        //            {
-        //                nearest_record = DateTime.Parse(item.TimeRecord.ToString("MM-yyyy")); 
-        //                existdetail = item;
-        //            }// giúp gán existdetail thành data gần nhất so với tháng lập phiếu
-        //        }
-        //        // chạy xong foreach này: 1 là chỉ update tồn sách 1 tháng, 2 là gán existdetail tới data tồn gàn nhất
-        //        if (!check_break)
-        //        {
-
-        //            var list_month = new List<DateTime>(); // list các tháng 
-        //            var datestart = nearest_record.AddMonths(1); // thêm 1 tháng vào ngày gần nhất 
-        //            var dateend = DateTime.Parse(ticket.DateEntry.ToString("MM-yyyy"));
-        //            for (var dt = datestart; dt < dateend; dt = dt.AddMonths(1)) // tạo ra 1 list tháng sao cho > hơn nearestdate và nhỏ hơn ngày tạo bill
-        //            {
-        //                list_month.Add(DateTime.Parse(dt.ToString("MM-yyyy")));
-        //            }
-        //            BookExistDetail newexist = new BookExistDetail();
-        //            newexist.BookExistHeaderId = bookin.Book.Id;
-        //            newexist.TimeRecord = DateTime.Parse(ticket.DateEntry.ToString("MM-yyyy"));
-        //            if (existdetail != null) //nếu đã từng nhập sách, list_exist_record không null
-        //            {
-        //                // tạo tồn sách của tháng hiện tại
-        //                newexist.Id = Guid.NewGuid().ToString();
-        //                newexist.FirstExist = existdetail.LastExist;
-        //                newexist.IncurredExist = qtyEntry;
-        //                newexist.LastExist = newexist.FirstExist + newexist.IncurredExist;
-        //                _db.BookExistDetails.Add(newexist);
-        //                _db.SaveChanges();
-        //                foreach (var mth in list_month)  // tạo data tồn cho các tháng chưa có từ tháng có data tồn gần nhất tới tháng có tương tác
-        //                {
-        //                    newexist.Id = Guid.NewGuid().ToString();
-        //                    newexist.TimeRecord = mth;  // lưu time record chỉ có tháng năm , không cần ngày
-        //                    newexist.FirstExist = existdetail.LastExist;
-        //                    newexist.IncurredExist = 0;
-        //                    newexist.LastExist = newexist.FirstExist + newexist.IncurredExist;
-        //                    _db.BookExistDetails.Add(newexist);
-        //                    _db.SaveChanges();
-        //                }
-        //            } 
-        //            else // nếu đã tới else này thì đây là lần nhập đầu tiên
-        //            {
-        //                newexist.Id = Guid.NewGuid().ToString();
-        //                newexist.FirstExist = 0;
-        //                newexist.IncurredExist = qtyEntry;
-        //                newexist.LastExist = newexist.FirstExist + newexist.IncurredExist;
-        //                _db.BookExistDetails.Add(newexist);
-        //                _db.SaveChanges();
-        //            }
-        //        }
-        //    }
-        //    _db.SaveChanges();
-        //    return true;
-
-            var list_BookInTicket = _db.BookEntryTicketDetails.Include(x => x.Book).ToList();
-            foreach ( var bookin in list_BookInTicket)
-            {
-                BookExistDetail existdetail = null;
-                int qtyEntry = bookin.Count;
-                DateTime nearest_record = bookin.Book.DatePublish;
-                var list_exist_record = _db.BookExistDetails.Where(x => x.BookId == bookin.BookId).ToList();
-                bool check_break = false;
-                foreach( var item in list_exist_record)
-                {
-                    var time = item.TimeRecord.ToString("MM-yyyy");
-                    if (time == ticket.DateEntry.ToString("MM-yyyy")) // nếu có data tồn kho có tháng trùng với tháng ngày nhập sách thì chỉ cần update tháng đó
-                    {
-                        item.IncurredExist += qtyEntry; 
-                        item.LastExist = item.FirstExist + item.IncurredExist; 
-                        _db.BookExistDetails.Update(item);
-                        _db.SaveChanges();
-                        check_break = true;
-                        break;
-                    }
-                    else if ((item.TimeRecord - ticket.DateEntry).TotalDays < 0 && (item.TimeRecord - nearest_record).TotalDays >= 0) 
-                    {
-                        nearest_record = DateTime.Parse(item.TimeRecord.ToString("MM-yyyy")); 
-                        existdetail = item;
-                    }// giúp gán existdetail thành data gần nhất so với tháng lập phiếu
-                }
-                // chạy xong foreach này: 1 là chỉ update tồn sách 1 tháng, 2 là gán existdetail tới data tồn gàn nhất
-                if (!check_break)
-                {
-
-                    var list_month = new List<DateTime>(); // list các tháng 
-                    var datestart = nearest_record.AddMonths(1); // thêm 1 tháng vào ngày gần nhất 
-                    var dateend = DateTime.Parse(ticket.DateEntry.ToString("MM-yyyy"));
-                    for (var dt = datestart; dt < dateend; dt = dt.AddMonths(1)) // tạo ra 1 list tháng sao cho > hơn nearestdate và nhỏ hơn ngày tạo bill
-                    {
-                        list_month.Add(DateTime.Parse(dt.ToString("MM-yyyy")));
-                    }
-                    BookExistDetail newexist = new BookExistDetail();
-                    newexist.BookId = bookin.Book.Id;
-                    newexist.TimeRecord = DateTime.Parse(ticket.DateEntry.ToString("MM-yyyy"));
-                    if (existdetail != null) //nếu đã từng nhập sách, list_exist_record không null
-                    {
-                        // tạo tồn sách của tháng hiện tại
-                        newexist.Id = Guid.NewGuid().ToString();
-                        newexist.FirstExist = existdetail.LastExist;
-                        newexist.IncurredExist = qtyEntry;
-                        newexist.LastExist = newexist.FirstExist + newexist.IncurredExist;
-                        _db.BookExistDetails.Add(newexist);
-                        _db.SaveChanges();
-                        foreach (var mth in list_month)  // tạo data tồn cho các tháng chưa có từ tháng có data tồn gần nhất tới tháng có tương tác
-                        {
-                            newexist.Id = Guid.NewGuid().ToString();
-                            newexist.TimeRecord = mth;  // lưu time record chỉ có tháng năm , không cần ngày
-                            newexist.FirstExist = existdetail.LastExist;
-                            newexist.IncurredExist = 0;
-                            newexist.LastExist = newexist.FirstExist + newexist.IncurredExist;
-                            _db.BookExistDetails.Add(newexist);
-                            _db.SaveChanges();
-                        }
-                    } 
-                    else // nếu đã tới else này thì đây là lần nhập đầu tiên
-                    {
-                        newexist.Id = Guid.NewGuid().ToString();
-                        newexist.FirstExist = 0;
-                        newexist.IncurredExist = qtyEntry;
-                        newexist.LastExist = newexist.FirstExist + newexist.IncurredExist;
-                        _db.BookExistDetails.Add(newexist);
-                        _db.SaveChanges();
-                    }
-                }
-            }
-            _db.SaveChanges();
-            return true;
-
-
-        //}
     }
 }
+//        //// xử lý tồn sách
+//        //private bool BookExist (BookEntryTicket ticket)
+//        //{
+
+
+//        //    var list_BookInTicket = _db.BookEntryTicketDetails.Include(x => x.Book).ToList();
+//        //    foreach ( var bookin in list_BookInTicket)
+//        //    {
+//        //        BookExistDetail existdetail = null;
+//        //        int qtyEntry = bookin.Count;
+//        //        DateTime nearest_record = bookin.Book.DatePublish;
+//        //        var list_exist_record = _db.BookExistDetails.Where(x => x.BookExistHeaderId == bookin.BookId).ToList();
+//        //        bool check_break = false;
+//        //        foreach( var item in list_exist_record)
+//        //        {
+//        //            var time = item.TimeRecord.ToString("MM-yyyy");
+//        //            if (time == ticket.DateEntry.ToString("MM-yyyy")) // nếu có data tồn kho có tháng trùng với tháng ngày nhập sách thì chỉ cần update tháng đó
+//        //            {
+//        //                item.IncurredExist += qtyEntry; 
+//        //                item.LastExist = item.FirstExist + item.IncurredExist; 
+//        //                _db.BookExistDetails.Update(item);
+//        //                _db.SaveChanges();
+//        //                check_break = true;
+//        //                break;
+//        //            }
+//        //            else if ((item.TimeRecord - ticket.DateEntry).TotalDays < 0 && (item.TimeRecord - nearest_record).TotalDays >= 0) 
+//        //            {
+//        //                nearest_record = DateTime.Parse(item.TimeRecord.ToString("MM-yyyy")); 
+//        //                existdetail = item;
+//        //            }// giúp gán existdetail thành data gần nhất so với tháng lập phiếu
+//        //        }
+//        //        // chạy xong foreach này: 1 là chỉ update tồn sách 1 tháng, 2 là gán existdetail tới data tồn gàn nhất
+//        //        if (!check_break)
+//        //        {
+
+//        //            var list_month = new List<DateTime>(); // list các tháng 
+//        //            var datestart = nearest_record.AddMonths(1); // thêm 1 tháng vào ngày gần nhất 
+//        //            var dateend = DateTime.Parse(ticket.DateEntry.ToString("MM-yyyy"));
+//        //            for (var dt = datestart; dt < dateend; dt = dt.AddMonths(1)) // tạo ra 1 list tháng sao cho > hơn nearestdate và nhỏ hơn ngày tạo bill
+//        //            {
+//        //                list_month.Add(DateTime.Parse(dt.ToString("MM-yyyy")));
+//        //            }
+//        //            BookExistDetail newexist = new BookExistDetail();
+//        //            newexist.BookExistHeaderId = bookin.Book.Id;
+//        //            newexist.TimeRecord = DateTime.Parse(ticket.DateEntry.ToString("MM-yyyy"));
+//        //            if (existdetail != null) //nếu đã từng nhập sách, list_exist_record không null
+//        //            {
+//        //                // tạo tồn sách của tháng hiện tại
+//        //                newexist.Id = Guid.NewGuid().ToString();
+//        //                newexist.FirstExist = existdetail.LastExist;
+//        //                newexist.IncurredExist = qtyEntry;
+//        //                newexist.LastExist = newexist.FirstExist + newexist.IncurredExist;
+//        //                _db.BookExistDetails.Add(newexist);
+//        //                _db.SaveChanges();
+//        //                foreach (var mth in list_month)  // tạo data tồn cho các tháng chưa có từ tháng có data tồn gần nhất tới tháng có tương tác
+//        //                {
+//        //                    newexist.Id = Guid.NewGuid().ToString();
+//        //                    newexist.TimeRecord = mth;  // lưu time record chỉ có tháng năm , không cần ngày
+//        //                    newexist.FirstExist = existdetail.LastExist;
+//        //                    newexist.IncurredExist = 0;
+//        //                    newexist.LastExist = newexist.FirstExist + newexist.IncurredExist;
+//        //                    _db.BookExistDetails.Add(newexist);
+//        //                    _db.SaveChanges();
+//        //                }
+//        //            } 
+//        //            else // nếu đã tới else này thì đây là lần nhập đầu tiên
+//        //            {
+//        //                newexist.Id = Guid.NewGuid().ToString();
+//        //                newexist.FirstExist = 0;
+//        //                newexist.IncurredExist = qtyEntry;
+//        //                newexist.LastExist = newexist.FirstExist + newexist.IncurredExist;
+//        //                _db.BookExistDetails.Add(newexist);
+//        //                _db.SaveChanges();
+//        //            }
+//        //        }
+//        //    }
+//        //    _db.SaveChanges();
+//        //    return true;
+
+//            var list_BookInTicket = _db.BookEntryTicketDetails.Include(x => x.Book).ToList();
+//            foreach ( var bookin in list_BookInTicket)
+//            {
+//                BookExistDetail existdetail = null;
+//                int qtyEntry = bookin.Count;
+//                DateTime nearest_record = bookin.Book.DatePublish;
+//                var list_exist_record = _db.BookExistDetails.Where(x => x.BookId == bookin.BookId).ToList();
+//                bool check_break = false;
+//                foreach( var item in list_exist_record)
+//                {
+//                    var time = item.TimeRecord.ToString("MM-yyyy");
+//                    if (time == ticket.DateEntry.ToString("MM-yyyy")) // nếu có data tồn kho có tháng trùng với tháng ngày nhập sách thì chỉ cần update tháng đó
+//                    {
+//                        item.IncurredExist += qtyEntry; 
+//                        item.LastExist = item.FirstExist + item.IncurredExist; 
+//                        _db.BookExistDetails.Update(item);
+//                        _db.SaveChanges();
+//                        check_break = true;
+//                        break;
+//                    }
+//                    else if ((item.TimeRecord - ticket.DateEntry).TotalDays < 0 && (item.TimeRecord - nearest_record).TotalDays >= 0) 
+//                    {
+//                        nearest_record = DateTime.Parse(item.TimeRecord.ToString("MM-yyyy")); 
+//                        existdetail = item;
+//                    }// giúp gán existdetail thành data gần nhất so với tháng lập phiếu
+//                }
+//                // chạy xong foreach này: 1 là chỉ update tồn sách 1 tháng, 2 là gán existdetail tới data tồn gàn nhất
+//                if (!check_break)
+//                {
+
+//                    var list_month = new List<DateTime>(); // list các tháng 
+//                    var datestart = nearest_record.AddMonths(1); // thêm 1 tháng vào ngày gần nhất 
+//                    var dateend = DateTime.Parse(ticket.DateEntry.ToString("MM-yyyy"));
+//                    for (var dt = datestart; dt < dateend; dt = dt.AddMonths(1)) // tạo ra 1 list tháng sao cho > hơn nearestdate và nhỏ hơn ngày tạo bill
+//                    {
+//                        list_month.Add(DateTime.Parse(dt.ToString("MM-yyyy")));
+//                    }
+//                    BookExistDetail newexist = new BookExistDetail();
+//                    newexist.BookId = bookin.Book.Id;
+//                    newexist.TimeRecord = DateTime.Parse(ticket.DateEntry.ToString("MM-yyyy"));
+//                    if (existdetail != null) //nếu đã từng nhập sách, list_exist_record không null
+//                    {
+//                        // tạo tồn sách của tháng hiện tại
+//                        newexist.Id = Guid.NewGuid().ToString();
+//                        newexist.FirstExist = existdetail.LastExist;
+//                        newexist.IncurredExist = qtyEntry;
+//                        newexist.LastExist = newexist.FirstExist + newexist.IncurredExist;
+//                        _db.BookExistDetails.Add(newexist);
+//                        _db.SaveChanges();
+//                        foreach (var mth in list_month)  // tạo data tồn cho các tháng chưa có từ tháng có data tồn gần nhất tới tháng có tương tác
+//                        {
+//                            newexist.Id = Guid.NewGuid().ToString();
+//                            newexist.TimeRecord = mth;  // lưu time record chỉ có tháng năm , không cần ngày
+//                            newexist.FirstExist = existdetail.LastExist;
+//                            newexist.IncurredExist = 0;
+//                            newexist.LastExist = newexist.FirstExist + newexist.IncurredExist;
+//                            _db.BookExistDetails.Add(newexist);
+//                            _db.SaveChanges();
+//                        }
+//                    } 
+//                    else // nếu đã tới else này thì đây là lần nhập đầu tiên
+//                    {
+//                        newexist.Id = Guid.NewGuid().ToString();
+//                        newexist.FirstExist = 0;
+//                        newexist.IncurredExist = qtyEntry;
+//                        newexist.LastExist = newexist.FirstExist + newexist.IncurredExist;
+//                        _db.BookExistDetails.Add(newexist);
+//                        _db.SaveChanges();
+//                    }
+//                }
+//            }
+//            _db.SaveChanges();
+//            return true;
+
+
+//        //}
+//    }
+//}
